@@ -65,7 +65,8 @@
 }
 
 
-\newcommand{\minSurf}[1]{\ensuremath{\mathcal{F}(#1)}}
+\newcommand{\mSurf}[1]{\ensuremath{\mathcal{F}(#1)}}
+\newcommand{\mSurfDisc}[1]{\ensuremath{\mathcal{F}^h(#1)}}
 
 \begin{document}
 \maketitle
@@ -92,14 +93,16 @@ Some bla bla on the background
 
 Minimal surface equation, $z(x,y)\in C_2(\bar{\Omega})$ s.th.
 \begin{align}
-	(1+z_y^2) z_{xx} - 2 z_x z_y z_{xy} + (1+z_x^2)z_{yy} = \minSurf{z} &= 0 \quad &\text{in } \Omega \\
+	(1+z_y^2) z_{xx} - 2 z_x z_y z_{xy} + (1+z_x^2)z_{yy} = \mSurf{z} &= 0 \quad &\text{in } \Omega \\
 	z(x,y) &= g(x,y) \quad &\text{on } \partial \Omega
 \end{align}
 
 nonlinear, elliptic PDE of second order, ...
 
 Solve numerically by Newton, approximate derivatives by FD-stencils, ...
-
+\begin{equation}
+	\mSurfDisc{z^h} = r^h
+\end{equation}
 If totally bored, check consistency of the method
 
 
@@ -123,7 +126,7 @@ timing benchmarks for different approaches (openMP and not), compare to matlab m
 
 % #########################################################################
 \section{Conclusions and outlook}
-Some wise words, what how can we extend stuff, ...
+Some wise words, on what how can we extend stuff, ...
 
 % #########################################################################
 
