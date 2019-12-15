@@ -1,0 +1,134 @@
+\documentclass[11pt]{scrartcl}
+
+\usepackage[hidelinks, colorlinks=true]{hyperref}
+
+\usepackage[english]{babel}
+\usepackage{helvet}
+\usepackage{mathpazo}
+\usepackage{euler}
+\usepackage{scrlayer-scrpage}
+\usepackage[authoryear]{natbib}
+\usepackage{csquotes}
+\usepackage{xcolor}
+\definecolor{@darkblue}{RGB}{0,0,140}
+\definecolor{@darkgreen}{RGB}{0,100,70}
+\hypersetup{
+	colorlinks   = true, %Colours links instead of ugly boxes
+	urlcolor     = @darkblue, %Colour for external hyperlinks
+	linkcolor    = @darkblue, %Colour of internal links
+	citecolor    = @darkgreen %Colour of citations
+}
+\usepackage[all]{hypcap}
+\usepackage{subcaption}
+
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{adjustbox}
+
+\usepackage{mathtools}
+\usepackage{epigraph}
+\usepackage{setspace}
+\usepackage{listings}
+
+\pagestyle{scrheadings}
+\clearscrheadfoot
+\automark{section}
+\renewcommand\sectionmark[1]{\markright{\MakeMarkcase {\thesection\hskip .5em\relax#1}}\rohead{\ifnum\expandafter\pdfstrcmp\botmark=0 \rightmark\else\leftmark{} --- \rightmark\fi}}
+
+
+\ofoot{\pagemark}
+
+
+% Title Page
+\title{Minimal Surfaces}
+\author{{Chenfei Fan \\  Praveen Mishra \\ Sankarasubramanian Ragunathan\\ Philipp Schleich}}
+
+\subject{Report \\ Simulation Sciences Laboratory}
+\date{\today \\ \vspace{0.9cm}}
+
+\publishers{
+	
+	\vspace{2em}
+	
+	\begin{tabular}[!b]{ll}
+		Supervisor: & Prof. Dr. Uwe Naumann \\[3pt]
+		            & Klaus Leppkes
+	\end{tabular}
+%	\begin{figure}[h!]
+%		\centering
+%		\includegraphics[width=.6\linewidth]{figs/mathccesText.png}%
+%		
+%	\end{figure}
+	
+}
+
+
+\newcommand{\minSurf}[1]{\ensuremath{\mathcal{F}(#1)}}
+
+\begin{document}
+\maketitle
+
+\section*{Abstract}
+\begin{abstract}
+\noindent bla bla bla 
+\end{abstract}
+
+\clearpage
+\protect \tableofcontents
+
+
+
+\newpage
+	
+\onehalfspacing
+% #########################################################################
+\section{Introduction}
+...
+% #########################################################################
+\section{Background}
+Some bla bla on the background
+
+Minimal surface equation, $z(x,y)\in C_2(\bar{\Omega})$ s.th.
+\begin{align}
+	(1+z_y^2) z_{xx} - 2 z_x z_y z_{xy} + (1+z_x^2)z_{yy} = \minSurf{z} &= 0 \quad &\text{in } \Omega \\
+	z(x,y) &= g(x,y) \quad &\text{on } \partial \Omega
+\end{align}
+
+nonlinear, elliptic PDE of second order, ...
+
+Solve numerically by Newton, approximate derivatives by FD-stencils, ...
+
+If totally bored, check consistency of the method
+
+
+
+% #########################################################################
+\section{Implementation}
+
+How we implemented things, ...
+
+a nice flowchart (can be maybe done in powerpoint, easier here) on how the code works, plus explanations
+
+test coverage
+
+
+% #########################################################################
+\section{Results, benchmark}
+A few nice pictures for stuff
+
+timing benchmarks for different approaches (openMP and not), compare to matlab maybe
+
+
+% #########################################################################
+\section{Conclusions and outlook}
+Some wise words, what how can we extend stuff, ...
+
+% #########################################################################
+
+%
+
+
+
+\end{document}          
