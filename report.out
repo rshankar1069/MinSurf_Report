@@ -1,5 +1,7 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Background}{}% 2
-\BOOKMARK [1][-]{section.3}{Implementation}{}% 3
-\BOOKMARK [1][-]{section.4}{Results, benchmark}{}% 4
-\BOOKMARK [1][-]{section.5}{Conclusions and outlook}{}% 5
+\BOOKMARK [2][-]{subsection.2.1}{General background \(don't like this title\)}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.2}{Numerical solution}{section.2}% 4
+\BOOKMARK [1][-]{section.3}{Implementation}{}% 5
+\BOOKMARK [1][-]{section.4}{Results, benchmark}{}% 6
+\BOOKMARK [1][-]{section.5}{Conclusions and outlook}{}% 7

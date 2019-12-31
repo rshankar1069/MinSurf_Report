@@ -32,24 +32,25 @@
 \usepackage{setspace}
 \usepackage{listings}
 
+% ----------------- Layout stuff  -------------------------------
+
 \pagestyle{scrheadings}
 \clearscrheadfoot
-\automark{section}
-\renewcommand\sectionmark[1]{\markright{\MakeMarkcase {\thesection\hskip .5em\relax#1}}\rohead{\ifnum\expandafter\pdfstrcmp\botmark=0 \rightmark\else\leftmark{} --- \rightmark\fi}}
+%\automark{section}
+%\renewcommand\sectionmark[1]{\markright{\MakeMarkcase {\thesection\hskip .5em\relax#1}}\rohead{\ifnum\expandafter\pdfstrcmp\botmark=0 \rightmark\else\leftmark{} --- \rightmark\fi}}
 
 
 \ofoot{\pagemark}
 
-
+% ---------------------  Title page setup ----------------------------
 % Title Page
 \title{Minimal Surfaces}
-\author{{Chenfei Fan \\  Praveen Mishra \\ Sankarasubramanian Ragunathan\\ Philipp Schleich}}
-
+\author{Chenfei Fan \\  Praveen Mishra \\ Sankarasubramanian Ragunathan\\ Philipp Schleich}
+%
 \subject{Report \\ Simulation Sciences Laboratory}
 \date{\today \\ \vspace{0.9cm}}
 
 \publishers{
-	
 	\vspace{2em}
 	
 	\begin{tabular}[!b]{ll}
@@ -61,19 +62,24 @@
 %		\includegraphics[width=.6\linewidth]{figs/mathccesText.png}%
 %		
 %	\end{figure}
-	
 }
+% -------------------------------------------------------------
 
+\newcommand{\mSurf}[1]{\ensuremath{\mathcal{F}\left[#1\right]}}
+\newcommand{\mSurfDisc}[1]{\ensuremath{\mathtt{F}^h\left[#1\right]}}
+\newcommand{\Dx}[1]{\ensuremath{\mathtt{d}_x[#1]}}
+\newcommand{\Dy}[1]{\ensuremath{\mathtt{d}_y[#1]}}
+\newcommand{\Dxx}[1]{\ensuremath{\mathtt{d}_{xx}[#1]}}
+\newcommand{\Dyy}[1]{\ensuremath{\mathtt{d}_{yy}[#1}}
+\newcommand{\Dxy}[1]{\ensuremath{\mathtt{d}_{xy}[#1]}}
 
-\newcommand{\mSurf}[1]{\ensuremath{\mathcal{F}(#1)}}
-\newcommand{\mSurfDisc}[1]{\ensuremath{\mathcal{F}^h(#1)}}
 
 \begin{document}
 \maketitle
 
 \section*{Abstract}
 \begin{abstract}
-\noindent bla bla bla 
+\noindent Abstract might be unnecessary
 \end{abstract}
 
 \clearpage
@@ -89,20 +95,42 @@
 ...
 % #########################################################################
 \section{Background}
-Some bla bla on the background
+\subsection{General background (don't like this title)}
+We look at surfaces in $ \mathbb{R}^3 $, defined over an open set $\Omega \subset \mathbb{R}^2$. 
+The surface of desire should contain the least possible area among all possible surfaces, that assume given values on the boundary of $\Omega$, denoted by $\partial \Omega$. \cite{Sakai1976}
 
-Minimal surface equation, $z(x,y)\in C_2(\bar{\Omega})$ s.th.
-\begin{align}
+Lagrange showed in 1760, that such a surface is characterized by the graphic of a function $z(x,y)$, $z: \mathbb{R}^2 \to \mathbb{R} $, which is twice continuously differentiable on a twodimensional domain, particularly in a subset of $\mathbb{R}^2$.
+This function $z$ has to fulfill the so called \textit{Minimal-Surface Equation} (MSE) stated below.
+\begin{align}\label{eq:MSE}
 	(1+z_y^2) z_{xx} - 2 z_x z_y z_{xy} + (1+z_x^2)z_{yy} = \mSurf{z} &= 0 \quad &\text{in } \Omega \\
 	z(x,y) &= g(x,y) \quad &\text{on } \partial \Omega
 \end{align}
+Clearly, this formulation satisfies the prescribed boundary values given by $g(x,y)$ due to the Dirichlet boundary condition on $\partial\Omega$.
+As to why the graphic of functions solving this equation describes a minimal surface, we refer to the literature. For example \cite{Sakai1976} gives a very straightforward proof. [if there's time, we might write this up here]
 
-nonlinear, elliptic PDE of second order, ...
+In the following, we will call the differential operator $\mSurf{\cdot}$ the Minimal-Surface Operator (MSO). The resulting partial differential equation (PDE) in eq. \eqref{eq:MSE} turns out to be an elliptic PDE of second order, which is in particular \textit{non-linear}. The solution of such a PDE is not trivial, and typically requires numerical treatment. For certain cases, analytical descriptions are available, such as for Scherk's surface\footnote{Here, we only look at Scherk's first surface}.
 
-Solve numerically by Newton, approximate derivatives by FD-stencils, ...
+[Here, introduce Scherks surface]
+
+Later on, we will use Scherk's surface as a test-case to verify our numerical results.
+
+\newpage
+\subsection{Numerical solution}
+In this project, we are supposed to solve the MSE numerically on $\Omega \equiv (0,1)\times(0,1)$. In the following, discretized quantities are indicated by a superscript $h$. The spatial domain is to be discretized using a structured mesh with equidistant grid spacing both in $x,y$, i.e. we have the same number of grid points in both directions, $N=N_x=N_y$. Thus, we define $\Omega^h := \{ (x,y) \in \mathbb{R}^2:\text{ }(x,y) = (ih, jh), \text{ } 0 \le i,j < N,\text{ }hN=1\}$.
+
+[Picture of Omega-h]
+
+We choose to discretize the MSO on $\Omega^h$ by Finite Differences, since this is usually the easiest way to go, and on a structured grid, would anyways yield similar discrete equation as in Finite Volume or Finite Element methods.
+
+To obtain a second order consistent discrete MSO (\mSurfDisc{\cdot}), we use central difference stencils on the first, second and mixed derivative. Since all these stencils have make only use of immediate neighours, there is no need to treat nodes close to the boundary differently, since the boundary is given by $g(\cdot)$.
+
+This way, we obtain a discrete version of \eqref{eq:MSE}:
 \begin{equation}
-	\mSurfDisc{z^h} = r^h
+	(1+\Dx{z^h}^2)\Dyy{z^h}-\Dx{z^h} \Dy{z^h}\Dxy{z^h} + (1+\Dy{z^h}^2)\Dxx{z^h} = \mSurfDisc{z^h} = r^h
 \end{equation}
+
+--> Why = r-h, boundary, introduce stencils and maybe provide pictures, consistency
+
 If totally bored, check consistency of the method
 
 
@@ -131,7 +159,7 @@ Some wise words, on what how can we extend stuff, ...
 % #########################################################################
 
 %
-
+\bibliography{bibliography}
 
 
 \end{document}          
