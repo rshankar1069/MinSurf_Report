@@ -31,6 +31,11 @@
 \usepackage{epigraph}
 \usepackage{setspace}
 \usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\usepackage{tikz}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns}
 
 % ----------------- Layout stuff  -------------------------------
 
@@ -70,9 +75,10 @@
 \newcommand{\Dx}[1]{\ensuremath{\mathtt{d}_x[#1]}}
 \newcommand{\Dy}[1]{\ensuremath{\mathtt{d}_y[#1]}}
 \newcommand{\Dxx}[1]{\ensuremath{\mathtt{d}_{xx}[#1]}}
-\newcommand{\Dyy}[1]{\ensuremath{\mathtt{d}_{yy}[#1}}
+\newcommand{\Dyy}[1]{\ensuremath{\mathtt{d}_{yy}[#1]}}
 \newcommand{\Dxy}[1]{\ensuremath{\mathtt{d}_{xy}[#1]}}
 
+\newcommand{\inv}{\ensuremath{^{-1}}}
 
 \begin{document}
 \maketitle
@@ -103,7 +109,7 @@ Lagrange showed in 1760, that such a surface is characterized by the graphic of 
 This function $z$ has to fulfill the so called \textit{Minimal-Surface Equation} (MSE) stated below.
 \begin{align}\label{eq:MSE}
 	(1+z_y^2) z_{xx} - 2 z_x z_y z_{xy} + (1+z_x^2)z_{yy} = \mSurf{z} &= 0 \quad &\text{in } \Omega \\
-	z(x,y) &= g(x,y) \quad &\text{on } \partial \Omega
+	z(x,y) &= g(x,y) \quad &\text{on } \partial \Omega \notag
 \end{align}
 Clearly, this formulation satisfies the prescribed boundary values given by $g(x,y)$ due to the Dirichlet boundary condition on $\partial\Omega$.
 As to why the graphic of functions solving this equation describes a minimal surface, we refer to the literature. For example \cite{Sakai1976} gives a very straightforward proof. [if there's time, we might write this up here]
@@ -125,13 +131,32 @@ We choose to discretize the MSO on $\Omega^h$ by Finite Differences, since this 
 To obtain a second order consistent discrete MSO (\mSurfDisc{\cdot}), we use central difference stencils on the first, second and mixed derivative. Since all these stencils have make only use of immediate neighours, there is no need to treat nodes close to the boundary differently, since the boundary is given by $g(\cdot)$.
 
 This way, we obtain a discrete version of \eqref{eq:MSE}:
-\begin{equation}
-	(1+\Dx{z^h}^2)\Dyy{z^h}-\Dx{z^h} \Dy{z^h}\Dxy{z^h} + (1+\Dy{z^h}^2)\Dxx{z^h} = \mSurfDisc{z^h} = r^h
-\end{equation}
+\begin{align}
+	(1+\Dx{z^h}^2)\Dyy{z^h}-\Dx{z^h} \Dy{z^h}\Dxy{z^h} + (1+\Dy{z^h}^2)\Dxx{z^h} = \mSurfDisc{z^h} &= 0  \quad \text{in } \Omega^h \notag \\
+	z^h &= g \quad \text{on } \partial\Omega^h \label{eq:dMSE}
+\end{align}
 
---> Why = r-h, boundary, introduce stencils and maybe provide pictures, consistency
+-->  introduce stencils and maybe provide pictures, consistency
+
 
 If totally bored, check consistency of the method
+
+
+
+Note, that the discrete equation is not anymore consistent with the right-hand-side of \eqref{eq:MSE}, but yields $\mSurfDisc{z^h} = r^h \neq 0$. This is due to the non-linear nature of the PDE, and the solution to \eqref{eq:dMSE} thus boils down to an iterative root-finding problem, i.e. in iteration $k$, we get $\mSurfDisc{z^h_k}=r^h_k$, and we want $r^h_k \to 0$ for increasing, yet still reasonably small $k$. This can be achieved by the standard Newton-Raphson procedure as follows:
+\begin{algorithm}
+	\caption{Newton's method applied on the discrete MSE}
+	\begin{algorithmic}
+		\State $k \gets 0$ 
+		\State $z^h_k \gets 0 $ \Comment{Or a more sophisticated initial guess}
+		\State $r^h_k \gets \mSurfDisc{z^h_k}$
+		\While{$\lVert r^h_k \rVert > \textsc{tol}$} \Comment{ We choose $ \lVert \cdot \rVert = \lVert \cdot \rVert_2  $}
+			\State $z^h_{k+1} \gets z^h_{k} - \left(\mSurfDisc{z^h_k}\right)\inv r^h_k $
+			\State $k \gets k+1$ 
+			\State $r^h_k \gets \mSurfDisc{z^h_k}$
+		\EndWhile
+	\end{algorithmic}
+\end{algorithm}
 
 
 
@@ -142,7 +167,7 @@ How we implemented things, ...
 
 a nice flowchart (can be maybe done in powerpoint, easier here) on how the code works, plus explanations
 
-test coverage
+test cases -> this might aswell be mentioned in results (the larger testcases)
 
 
 % #########################################################################
@@ -150,6 +175,7 @@ test coverage
 A few nice pictures for stuff
 
 timing benchmarks for different approaches (openMP and not), compare to matlab maybe
+
 
 
 % #########################################################################
