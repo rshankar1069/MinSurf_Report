@@ -34,8 +34,8 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 
-\usepackage{tikz}
-\usetikzlibrary{calc,decorations.pathmorphing,patterns}
+\usepackage{tikz, pgfplots}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns, pgfplots.colorbrewer}
 
 % ----------------- Layout stuff  -------------------------------
 
@@ -114,17 +114,83 @@ This function $z$ has to fulfill the so called \textit{Minimal-Surface Equation}
 Clearly, this formulation satisfies the prescribed boundary values given by $g(x,y)$ due to the Dirichlet boundary condition on $\partial\Omega$.
 As to why the graphic of functions solving this equation describes a minimal surface, we refer to the literature. For example \cite{Sakai1976} gives a very straightforward proof. [if there's time, we might write this up here]
 
-In the following, we will call the differential operator $\mSurf{\cdot}$ the Minimal-Surface Operator (MSO). The resulting partial differential equation (PDE) in eq. \eqref{eq:MSE} turns out to be an elliptic PDE of second order, which is in particular \textit{non-linear}. The solution of such a PDE is not trivial, and typically requires numerical treatment. For certain cases, analytical descriptions are available, such as for Scherk's surface\footnote{Here, we only look at Scherk's first surface}.
+In the following, we will call the differential operator $\mSurf{\cdot}$ the Minimal-Surface Operator (MSO). The resulting partial differential equation (PDE) in eq. \eqref{eq:MSE} turns out to be an elliptic PDE of second order, which is in particular \textit{non-linear}. The solution of such a PDE is not trivial, and typically requires numerical treatment. For certain cases, analytical descriptions are available, such as for Scherk's surface.
 
-[Here, introduce Scherks surface]
+As an example, Scherk's first surface $\Sigma$ rescaled on $\Omega = [0,1]^2$ is given by
+\begin{equation}
+	\Sigma = \left\{ \left. \left(x, y, \log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) \right) \in \mathbb{R}^{3} \right  | 0 < x, y < 1 \right\}.
+\end{equation} 
+\begin{figure}
+	\centering
+	\begin{tikzpicture}
+	\begin{axis}[samples=10, colormap/viridis]
+	\addplot3[surf, domain=0:1] {ln( cos(pi*(x-0.5)) / cos(pi*(y-0.5)) ) };
+	\end{axis}
+	\end{tikzpicture}
+	\caption{Scherk's first surface on $[0,1]^2$}
+\end{figure}
+Via the MSE this surface can be obtained by choosing appropiate boundary conditions. This means, we have to set $g(x,y)$ to $\log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) $ for $x=0$ (left), $y=0$ (bottom), $x=1$ (right) and $y=1$ (top).
 
 Later on, we will use Scherk's surface as a test-case to verify our numerical results.
 
 \newpage
 \subsection{Numerical solution}
+\subsubsection{Discretization}
 In this project, we are supposed to solve the MSE numerically on $\Omega \equiv (0,1)\times(0,1)$. In the following, discretized quantities are indicated by a superscript $h$. The spatial domain is to be discretized using a structured mesh with equidistant grid spacing both in $x,y$, i.e. we have the same number of grid points in both directions, $N=N_x=N_y$. Thus, we define $\Omega^h := \{ (x,y) \in \mathbb{R}^2:\text{ }(x,y) = (ih, jh), \text{ } 0 \le i,j < N,\text{ }hN=1\}$.
 
-[Picture of Omega-h]
+\begin{figure}[h!]
+	\centering
+	\adjustbox{scale=3}{ 
+	\begin{tikzpicture}
+	\draw [gray!50!white, step=0.2] (-0.3,-0.3) grid (1.3,1.3);
+	\draw [thick, ->] (0,-0.4) -- (0,1.4);
+	\draw [thick, ->] (-0.4,0) -- (1.4,0);
+	
+	\draw [red,  thick] (0,0) rectangle (1,1);
+	
+	\node at (-0.17,-0.14) [scale=0.4] {(0,0)};		
+	\node at (1.17,-0.14) [scale=0.4] {(1,0)};		
+	\node at (-0.17,1.1) [scale=0.4] {(0,1)};		
+	\node at (1.17,1.1) [scale=0.4] {(1,1)};		
+	
+	
+	
+	% Boundary nodes
+	\foreach \x in {0,1,2,3,4,5} {
+		\foreach \y in {0} { % bottom
+			\node at (\x/5,\y/5) [circle,fill=red, scale=0.35] {};
+			%this way circle of nodes will not be transformed
+		}
+	}
+	\foreach \x in {0} { % left
+		\foreach \y in {0, 1,2,3,4,5} {
+			\node at (\x/5,\y/5) [circle,fill=red, scale=0.35] {};
+			%this way circle of nodes will not be transformed
+		}
+	}
+	\foreach \x in {0,1,2,3,4,5} { % top
+		\foreach \y in {5} {
+			\node at (\x/5,\y/5) [circle,fill=red, scale=0.35] {};
+			%this way circle of nodes will not be transformed
+		}
+	}
+	\foreach \x in {5} { % right
+		\foreach \y in {0,1,2,3,4,5} {
+			\node at (\x/5,\y/5) [circle,fill=red, scale=0.35] {};
+			%this way circle of nodes will not be transformed
+		}
+	}
+	%Inner nodes
+	\foreach \x in {1,2,3,4} {
+		\foreach \y in {1,2,3,4} {
+			\node at (\x/5,\y/5) [circle,fill=blue, scale=0.35] {};
+			%this way circle of nodes will not be transformed
+		}
+	}
+	\end{tikzpicture}
+	}
+	\caption[Depiction of $\Omega^h$ with $h=0.2$, $hN=1$]{Depiction of $\Omega^h$ with $h=0.2$, $hN=1$. Blue: inner nodes, red: boundary nodes}
+\end{figure}
 
 We choose to discretize the MSO on $\Omega^h$ by Finite Differences, since this is usually the easiest way to go, and on a structured grid, would anyways yield similar discrete equation as in Finite Volume or Finite Element methods.
 
@@ -133,37 +199,77 @@ To obtain a second order consistent discrete MSO (\mSurfDisc{\cdot}), we use cen
 This way, we obtain a discrete version of \eqref{eq:MSE}:
 \begin{align}
 	(1+\Dx{z^h}^2)\Dyy{z^h}-\Dx{z^h} \Dy{z^h}\Dxy{z^h} + (1+\Dy{z^h}^2)\Dxx{z^h} = \mSurfDisc{z^h} &= 0  \quad \text{in } \Omega^h \notag \\
-	z^h &= g \quad \text{on } \partial\Omega^h \label{eq:dMSE}
+	z^h &= g \quad \text{on } \partial\Omega^h \label{eq:dMSE},
 \end{align}
+while the stencils defined on the inner nodes are given as follows ($1 \le i,j \le N-1$):
+\begin{align}
+	\Dx{z} &= \frac{z_{i+1,j}-z_{i-1,j}}{2h} \\
+	\Dy{z} &= \frac{z_{i,j+1}-z_{i,j-1}}{2h} \\
+	\Dxx{z} &= \frac{z_{i+1,j} - 2z_{i,j} + z_{i-1,j}}{h^2}\\
+	\Dyy{z} &= \frac{z_{i,j+1} - 2z_{i,j} + z_{i,j-1}}{h^2}\\
+	\Dxy{z} &= \frac{z_{i+1,j+1} + z_{i-1,j-1} - z_{i-1,j+1}-z_{i+1,j-1}}{4h^2}. 
+\end{align}
+Since the stencils have only support to the nearest neighbors, there is no need tho treat nodes close to the boundary any different. 
 
--->  introduce stencils and maybe provide pictures, consistency
+\textbf{If totally bored, check consistency of the method}
 
 
-If totally bored, check consistency of the method
-
-
-
-Note, that the discrete equation is not anymore consistent with the right-hand-side of \eqref{eq:MSE}, but yields $\mSurfDisc{z^h} = r^h \neq 0$. This is due to the non-linear nature of the PDE, and the solution to \eqref{eq:dMSE} thus boils down to an iterative root-finding problem, i.e. in iteration $k$, we get $\mSurfDisc{z^h_k}=r^h_k$, and we want $r^h_k \to 0$ for increasing, yet still reasonably small $k$. This can be achieved by the standard Newton-Raphson procedure as follows:
+\subsubsection{Solution}
+Note, that the discrete equation is not anymore consistent with the right-hand-side of \eqref{eq:MSE}, but yields $\mSurfDisc{z^h} = r^h \neq 0$. This is due to the non-linear nature of the PDE, and the solution to \eqref{eq:dMSE} thus boils down to an iterative root-finding problem, i.e. in iteration $k$, we get $\mSurfDisc{z^h_k}=r^h_k$, and we want $r^h_k \to 0$ for increasing, yet still reasonably small $k$. This can be achieved by the standard Newton-Raphson procedure as in Algorithm~\ref{algo:standard-newton}.
 \begin{algorithm}
-	\caption{Newton's method applied on the discrete MSE}
+	\caption{Newton's method applied on the discrete MSE}\label{algo:standard-newton}
 	\begin{algorithmic}
 		\State $k \gets 0$ 
-		\State $z^h_k \gets 0 $ \Comment{Or a more sophisticated initial guess}
+		\State $z^h_k \gets 0 $ 
 		\State $r^h_k \gets \mSurfDisc{z^h_k}$
 		\While{$\lVert r^h_k \rVert > \textsc{tol}$} \Comment{ We choose $ \lVert \cdot \rVert = \lVert \cdot \rVert_2  $}
-			\State $z^h_{k+1} \gets z^h_{k} - \left(\mSurfDisc{z^h_k}\right)\inv r^h_k $
+			\State $z^h_{k+1} \gets z^h_{k} - \left(\nabla\mSurfDisc{z^h_k}\right)\inv r^h_k $
 			\State $k \gets k+1$ 
 			\State $r^h_k \gets \mSurfDisc{z^h_k}$
 		\EndWhile
 	\end{algorithmic}
 \end{algorithm}
 
+This algorithm involves the computation of the inverse of the gradient of $\mSurfDisc{z^h_k}$ for each iteration $k$. Later, we will present and compare two different ways on how to contrive this.
 
+It is well known, that the Newton-Raphson procedure yields fast convergence, but the success of this convergence is highly dependent on the initial guess $z^h_0$. Furthermore, convergence can be improved by choosing an initial guess that is closer to the solution. 
+To this end, recall the MSE, equation \eqref{eq:MSE}. Considering only linear terms, we get 
+\begin{align}
+	\mathcal{L} [z] = z_{xx} + z_{yy} &= 0 \quad \text{ in }& \Omega \\
+	z(x,y) &= g(x,y) \quad \text{ on }& \partial\Omega \notag 
+\end{align}
+This linear, second order PDE is well known as the Laplace-equation, and can be solved by discretizing the second derivatives using the definitions for $\Dxx{\cdot},\Dyy{\cdot}$ introduced before, and get $\mathtt{L}[z^h]=0 $. Since Laplace's equation can be regarded as a linearization of the MSE, we suspect to get a better initial guess (and thus faster and a more robust convergence behaviour) by first solving for $z^h_0= \mathtt{L}\inv 0$ . This way, we obtain a slightly modified version of Algorithm~\ref{algo:standard-newton}, stated in Algorithm~\ref{algo:laplace-newton}.
+
+The performance of 
+\begin{algorithm}
+	\caption{Newton's method using Laplace's Equ. as initial guess}\label{algo:laplace-newton}
+	\begin{algorithmic}
+		\State $k \gets 0$ 
+		\State $z^h_k \gets \mathtt{L}\inv 0 $ \Comment{Solve Laplace's Equ. as initial guess}
+		\State $r^h_k \gets \mSurfDisc{z^h_k}$
+		\While{$\lVert r^h_k \rVert > \textsc{tol}$} 
+		\State $z^h_{k+1} \gets z^h_{k} - \left(\nabla\mSurfDisc{z^h_k}\right)\inv r^h_k $
+		\State $k \gets k+1$ 
+		\State $r^h_k \gets \mSurfDisc{z^h_k}$
+		\EndWhile
+	\end{algorithmic}
+\end{algorithm}
 
 % #########################################################################
 \section{Implementation}
 
 How we implemented things, ...
+
+Within the Newton iterations, it is necessary to compute the inverse of the Jacobian of the discrete MSO. We implemented this procedure following two different strategies:
+\begin{itemize}
+	\item Based on generating the Jacobian matrix $\nabla\mSurfDisc{z^h_k}$ and computing its inverse
+	\begin{itemize}
+		\item Hard-code a manually calculated Jacobian (to verify results)
+		\item Build a Jacobian matrix from Automatic Differention (AD by hand)
+	\end{itemize}
+	\item Based on a linear iterative scheme, where we do not explicitly build the Jacobian, but extract its action on certain vectors from AD and feed this to a linear iterative solver
+\end{itemize}
+
 
 a nice flowchart (can be maybe done in powerpoint, easier here) on how the code works, plus explanations
 

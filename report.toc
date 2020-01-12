@@ -3,6 +3,8 @@
 \contentsline {section}{\numberline {2}Background}{3}{section.2}
 \contentsline {subsection}{\numberline {2.1}General background (don't like this title)}{3}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Numerical solution}{4}{subsection.2.2}
-\contentsline {section}{\numberline {3}Implementation}{5}{section.3}
-\contentsline {section}{\numberline {4}Results, benchmark}{5}{section.4}
-\contentsline {section}{\numberline {5}Conclusions and outlook}{5}{section.5}
+\contentsline {subsubsection}{\numberline {2.2.1}Discretization}{4}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Solution}{5}{subsubsection.2.2.2}
+\contentsline {section}{\numberline {3}Implementation}{6}{section.3}
+\contentsline {section}{\numberline {4}Results, benchmark}{7}{section.4}
+\contentsline {section}{\numberline {5}Conclusions and outlook}{7}{section.5}
