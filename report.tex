@@ -116,22 +116,26 @@ As to why the graphic of functions solving this equation describes a minimal sur
 
 In the following, we will call the differential operator $\mSurf{\cdot}$ the Minimal-Surface Operator (MSO). The resulting partial differential equation (PDE) in eq. \eqref{eq:MSE} turns out to be an elliptic PDE of second order, which is in particular \textit{non-linear}. The solution of such a PDE is not trivial, and typically requires numerical treatment. For certain cases, analytical descriptions are available, such as for Scherk's surface.
 
+
 As an example, Scherk's first surface $\Sigma$ rescaled on $\Omega = [0,1]^2$ is given by
 \begin{equation}
 	\Sigma = \left\{ \left. \left(x, y, \log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) \right) \in \mathbb{R}^{3} \right  | 0 < x, y < 1 \right\}.
 \end{equation} 
 \begin{figure}
 	\centering
-	\begin{tikzpicture}
-	\begin{axis}[samples=10, colormap/viridis]
-	\addplot3[surf, domain=0:1] {ln( cos(pi*(x-0.5)) / cos(pi*(y-0.5)) ) };
-	\end{axis}
-	\end{tikzpicture}
+	\includegraphics[width=.8\textwidth]{scherk-test}
 	\caption{Scherk's first surface on $[0,1]^2$}
 \end{figure}
-Via the MSE this surface can be obtained by choosing appropiate boundary conditions. This means, we have to set $g(x,y)$ to $\log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) $ for $x=0$ (left), $y=0$ (bottom), $x=1$ (right) and $y=1$ (top).
+\newpage
+The numerical solution of the MSE will require setting approbiate boundary conditions. Since $\log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) \to \pm \infty $ on $\partial\Omega$, this is numerically not very practical. We thus will choose to test with 
+\begin{align}
+\Sigma_n = \left\{ \left. \left(x, y, u_n(x,y) \right) \in \mathbb{R}^{3} \right  | 0 < x, y < 1 \right\}, \\
+\lim\limits_{y\to \pm 1} \to n \quad, 0 \le x \le 1 \\
+\lim\limits_{x\to \pm 1} \to -n \quad, 0 \le y \le 1
+\end{align}
+for $n=1$. 
 
-Later on, we will use Scherk's surface as a test-case to verify our numerical results.
+Later on, we will use this surface as a test-case to verify our numerical results.
 
 \newpage
 \subsection{Numerical solution}
@@ -213,7 +217,6 @@ Since the stencils have only support to the nearest neighbors, there is no need 
 
 \textbf{If totally bored, check consistency of the method}
 
-
 \subsubsection{Solution}
 Note, that the discrete equation is not anymore consistent with the right-hand-side of \eqref{eq:MSE}, but yields $\mSurfDisc{z^h} = r^h \neq 0$. This is due to the non-linear nature of the PDE, and the solution to \eqref{eq:dMSE} thus boils down to an iterative root-finding problem, i.e. in iteration $k$, we get $\mSurfDisc{z^h_k}=r^h_k$, and we want $r^h_k \to 0$ for increasing, yet still reasonably small $k$. This can be achieved by the standard Newton-Raphson procedure as in Algorithm~\ref{algo:standard-newton}.
 \begin{algorithm}
@@ -240,7 +243,6 @@ To this end, recall the MSE, equation \eqref{eq:MSE}. Considering only linear te
 \end{align}
 This linear, second order PDE is well known as the Laplace-equation, and can be solved by discretizing the second derivatives using the definitions for $\Dxx{\cdot},\Dyy{\cdot}$ introduced before, and get $\mathtt{L}[z^h]=0 $. Since Laplace's equation can be regarded as a linearization of the MSE, we suspect to get a better initial guess (and thus faster and a more robust convergence behaviour) by first solving for $z^h_0= \mathtt{L}\inv 0$ . This way, we obtain a slightly modified version of Algorithm~\ref{algo:standard-newton}, stated in Algorithm~\ref{algo:laplace-newton}.
 
-The performance of 
 \begin{algorithm}
 	\caption{Newton's method using Laplace's Equ. as initial guess}\label{algo:laplace-newton}
 	\begin{algorithmic}
@@ -254,6 +256,9 @@ The performance of
 		\EndWhile
 	\end{algorithmic}
 \end{algorithm}
+
+The latter two algorithms require both to determine the full Jacobian. But this would not necessarily be required to solve our problem.
+$\rightarrow$ matrix-free BiCGSTAB
 
 % #########################################################################
 \section{Implementation}
@@ -270,6 +275,7 @@ Within the Newton iterations, it is necessary to compute the inverse of the Jaco
 	\item Based on a linear iterative scheme, where we do not explicitly build the Jacobian, but extract its action on certain vectors from AD and feed this to a linear iterative solver
 \end{itemize}
 
+Argue that, since $\nabla F$ is not symmetric in general, need stabilized CG (better performance than GMRES according to Eigen library)
 
 a nice flowchart (can be maybe done in powerpoint, easier here) on how the code works, plus explanations
 
