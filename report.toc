@@ -4,7 +4,12 @@
 \contentsline {subsection}{\numberline {2.1}General background (don't like this title)}{3}{subsection.2.1}
 \contentsline {subsection}{\numberline {2.2}Numerical solution}{5}{subsection.2.2}
 \contentsline {subsubsection}{\numberline {2.2.1}Discretization}{5}{subsubsection.2.2.1}
-\contentsline {subsubsection}{\numberline {2.2.2}Solution}{6}{subsubsection.2.2.2}
-\contentsline {section}{\numberline {3}Implementation}{7}{section.3}
-\contentsline {section}{\numberline {4}Results, benchmark}{8}{section.4}
-\contentsline {section}{\numberline {5}Conclusions and outlook}{8}{section.5}
+\contentsline {subsubsection}{\numberline {2.2.2}Solution}{7}{subsubsection.2.2.2}
+\contentsline {subsection}{\numberline {2.3}Consequences for a implementation}{8}{subsection.2.3}
+\contentsline {section}{\numberline {3}Implementation}{9}{section.3}
+\contentsline {subsection}{\numberline {3.1}Software/Solver Design}{9}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Computing the Jacobian and solving linear systems}{9}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Testing}{9}{subsection.3.3}
+\contentsline {section}{\numberline {4}Results}{10}{section.4}
+\contentsline {section}{\numberline {5}Conclusions and outlook}{10}{section.5}
+\contentsline {section}{\numberline {A}User manual @Philipp}{10}{appendix.A}

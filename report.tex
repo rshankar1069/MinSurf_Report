@@ -35,7 +35,18 @@
 \usepackage{algpseudocode}
 
 \usepackage{tikz, pgfplots}
-\usetikzlibrary{calc,decorations.pathmorphing,patterns, pgfplots.colorbrewer}
+\usetikzlibrary{calc,decorations.pathmorphing,patterns, pgfplots.colorbrewer, shapes, arrows}
+% Define block styles
+\tikzstyle{decision} = [diamond, draw, fill=blue!20, 
+text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
+\tikzstyle{block} = [rectangle, draw, fill=blue!20, 
+text width=6em, text centered, rounded corners, minimum height=4em]
+\tikzstyle{cheap} = [rectangle,  
+text width=10em, text centered, minimum height=4em, node distance=3cm]
+\tikzstyle{line} = [draw, -latex']
+\tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
+minimum height=2em]
+
 
 % ----------------- Layout stuff  -------------------------------
 
@@ -112,28 +123,39 @@ This function $z$ has to fulfill the so called \textit{Minimal-Surface Equation}
 	z(x,y) &= g(x,y) \quad &\text{on } \partial \Omega \notag
 \end{align}
 Clearly, this formulation satisfies the prescribed boundary values given by $g(x,y)$ due to the Dirichlet boundary condition on $\partial\Omega$.
-As to why the graphic of functions solving this equation describes a minimal surface, we refer to the literature. For example \cite{Sakai1976} gives a very straightforward proof. [if there's time, we might write this up here]
+As to why the graphic of functions solving this equation describes a minimal surface, we refer to the literature. For example \cite{Sakai1976} gives a very straightforward proof.
 
 In the following, we will call the differential operator $\mSurf{\cdot}$ the Minimal-Surface Operator (MSO). The resulting partial differential equation (PDE) in eq. \eqref{eq:MSE} turns out to be an elliptic PDE of second order, which is in particular \textit{non-linear}. The solution of such a PDE is not trivial, and typically requires numerical treatment. For certain cases, analytical descriptions are available, such as for Scherk's surface.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=.5\textwidth]{figs/scherk-test}
+	\caption{Scherk's first surface on $[0,1]^2$}\label{fig:scherk01}
+\end{figure}
 
-As an example, Scherk's first surface $\Sigma$ rescaled on $\Omega = [0,1]^2$ is given by
+
+\newpage
+
+As an example, Scherk's first surface (compare to figure \ref{fig:scherk01}) $\Sigma$ rescaled on $\Omega = [0,1]^2$ is given by
 \begin{equation}
 	\Sigma = \left\{ \left. \left(x, y, \log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) \right) \in \mathbb{R}^{3} \right  | 0 < x, y < 1 \right\}.
 \end{equation} 
-\begin{figure}
-	\centering
-	\includegraphics[width=.8\textwidth]{scherk-test}
-	\caption{Scherk's first surface on $[0,1]^2$}
-\end{figure}
-\newpage
-The numerical solution of the MSE will require setting approbiate boundary conditions. Since $\log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) \to \pm \infty $ on $\partial\Omega$, this is numerically not very practical. We thus will choose to test with 
+which is the limit $n\to \infty$ of 
 \begin{align}
 \Sigma_n = \left\{ \left. \left(x, y, u_n(x,y) \right) \in \mathbb{R}^{3} \right  | 0 < x, y < 1 \right\}, \\
 \lim\limits_{y\to \pm 1} \to n \quad, 0 \le x \le 1 \\
-\lim\limits_{x\to \pm 1} \to -n \quad, 0 \le y \le 1
+\lim\limits_{x\to \pm 1} \to -n \quad, 0 \le y \le 1.
 \end{align}
-for $n=1$. 
+
+
+The numerical solution of the MSE will require setting approbiate boundary conditions. Since $\log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) \to \pm \infty $ on $\partial\Omega$, this is numerically not very practical. 
+
+We thus introduce $\beta_x,\beta_y \in (0,1)$ s.th. 
+\begin{equation}
+\Sigma_{\text{trunc}} = \left\{ \left. \left(x, y, \log \left( \frac{\cos (\pi\beta_x(x-\frac{1}{2}))}{\cos (\pi\beta_y(y-\frac{1}{2}))} \right) \right) \in \mathbb{R}^{3} \right  | 0 < x, y < 1 \right\}.
+\end{equation} 
+
+By these means, we solve the MSE on $\Omega_\text{trunc}=[0,1]^2\subset\Omega$ with $\Omega=[0,\frac{1}{\beta_x}]\times[0,\frac{1}{\beta_y}]$. Exact boundary values on $\partial\Omega_\text{trunc}$ ensure the correctness of the results. We choose $\beta_x=\beta_y=\beta$, as we restrict ourselves to solving on a square domain.
 
 Later on, we will use this surface as a test-case to verify our numerical results.
 
@@ -150,50 +172,52 @@ In this project, we are supposed to solve the MSE numerically on $\Omega \equiv 
 	\draw [thick, ->] (0,-0.4) -- (0,1.4);
 	\draw [thick, ->] (-0.4,0) -- (1.4,0);
 	
-	\draw [red,  thick] (0,0) rectangle (1,1);
+	\draw [red, thick] (0,0) rectangle (1,1);
 	
 	\node at (-0.17,-0.14) [scale=0.4] {(0,0)};		
 	\node at (1.17,-0.14) [scale=0.4] {(1,0)};		
 	\node at (-0.17,1.1) [scale=0.4] {(0,1)};		
-	\node at (1.17,1.1) [scale=0.4] {(1,1)};		
+	\node at (1.17,1.1) [scale=0.4] {(1,1)};	
+	\node at (-.55, .7) [blue, scale=.5] {$\Omega^h$};	
+	\node at (-.4, .45) [red, scale=.5] {$\partial\Omega^h$};	
 	
 	
 	
 	% Boundary nodes
 	\foreach \x in {0,1,2,3,4,5} {
 		\foreach \y in {0} { % bottom
-			\node at (\x/5,\y/5) [circle,fill=red, scale=0.35] {};
+			\node at (\x/5,\y/5) [circle,fill=red, scale=0.3] {};
 			%this way circle of nodes will not be transformed
 		}
 	}
 	\foreach \x in {0} { % left
 		\foreach \y in {0, 1,2,3,4,5} {
-			\node at (\x/5,\y/5) [circle,fill=red, scale=0.35] {};
+			\node at (\x/5,\y/5) [circle,fill=red, scale=0.3] {};
 			%this way circle of nodes will not be transformed
 		}
 	}
 	\foreach \x in {0,1,2,3,4,5} { % top
 		\foreach \y in {5} {
-			\node at (\x/5,\y/5) [circle,fill=red, scale=0.35] {};
+			\node at (\x/5,\y/5) [circle,fill=red, scale=0.3] {};
 			%this way circle of nodes will not be transformed
 		}
 	}
 	\foreach \x in {5} { % right
 		\foreach \y in {0,1,2,3,4,5} {
-			\node at (\x/5,\y/5) [circle,fill=red, scale=0.35] {};
+			\node at (\x/5,\y/5) [circle,fill=red, scale=0.3] {};
 			%this way circle of nodes will not be transformed
 		}
 	}
 	%Inner nodes
 	\foreach \x in {1,2,3,4} {
 		\foreach \y in {1,2,3,4} {
-			\node at (\x/5,\y/5) [circle,fill=blue, scale=0.35] {};
+			\node at (\x/5,\y/5) [circle,fill=blue, scale=0.3] {};
 			%this way circle of nodes will not be transformed
 		}
 	}
 	\end{tikzpicture}
 	}
-	\caption[Depiction of $\Omega^h$ with $N=5$, $hN=1$]{Depiction of $\Omega^h$ with $h=0.2$, $hN=1$. Blue: inner nodes, red: boundary nodes}
+	\caption[Depiction of $\Omega^h$ with $N=5$, $hN=1$]{Depiction of $\Omega^h$ with $N=5$, $hN=1$. Blue: inner nodes, red: boundary nodes}
 \end{figure}
 
 We choose to discretize the MSO on $\Omega^h$ by Finite Differences, since this is usually the easiest way to go, and on a structured grid, would anyways yield similar discrete equation as in Finite Volume or Finite Element methods.
@@ -202,7 +226,7 @@ To obtain a second order consistent discrete MSO (\mSurfDisc{\cdot}), we use cen
 
 This way, we obtain a discrete version of \eqref{eq:MSE}:
 \begin{align}
-	(1+\Dx{z^h}^2)\Dyy{z^h}-\Dx{z^h} \Dy{z^h}\Dxy{z^h} + (1+\Dy{z^h}^2)\Dxx{z^h} = \mSurfDisc{z^h} &= 0  \quad \text{in } \Omega^h \notag \\
+	\left(1+\Dx{z^h}^2\right)\Dyy{z^h}-\Dx{z^h} \Dy{z^h}\Dxy{z^h} + \left(1+\Dy{z^h}^2\right)\Dxx{z^h} = \mSurfDisc{z^h} &= 0  \quad \text{in } \Omega^h \notag \\
 	z^h &= g \quad \text{on } \partial\Omega^h \label{eq:dMSE},
 \end{align}
 while the stencils defined on the inner nodes are given as follows ($1 \le i,j \le N-1$):
@@ -213,12 +237,18 @@ while the stencils defined on the inner nodes are given as follows ($1 \le i,j \
 	\Dyy{z} &= \frac{z_{i,j+1} - 2z_{i,j} + z_{i,j-1}}{h^2}\\
 	\Dxy{z} &= \frac{z_{i+1,j+1} + z_{i-1,j-1} - z_{i-1,j+1}-z_{i+1,j-1}}{4h^2}. 
 \end{align}
-Since the stencils have only support to the nearest neighbors, there is no need tho treat nodes close to the boundary any different. 
+Figure~\ref{fig:fdmmesh} depicts the stencils on a segment of $\Omega^h$.
+Since the stencils have only support to the nearest neighbors, there is no need tho treat nodes close to the boundary any different. Furthermore, this gives already rise to the conclusion, that the associated matrix will be sparse (for each of the $N$ gridpoints, only 9 instead of $N$ partners contribute).
 
-\textbf{If totally bored, check consistency of the method}
-
+\begin{figure}
+	\centering
+	\includegraphics[width=.4\linewidth]{figs/FDMMesh}
+	\caption{Snippet of the mesh with Finite Differences stencils\\red/blue: first and second order stencils in $x,y$\\
+	green: mixed stencil}\label{fig:fdmmesh}
+\end{figure}
+\newpage
 \subsubsection{Solution}
-Note, that the discrete equation is not anymore consistent with the right-hand-side of \eqref{eq:MSE}, but yields $\mSurfDisc{z^h} = r^h \neq 0$. This is due to the non-linear nature of the PDE, and the solution to \eqref{eq:dMSE} thus boils down to an iterative root-finding problem, i.e. in iteration $k$, we get $\mSurfDisc{z^h_k}=r^h_k$, and we want $r^h_k \to 0$ for increasing, yet still reasonably small $k$. This can be achieved by the standard Newton-Raphson procedure as in Algorithm~\ref{algo:standard-newton}.
+The main difficulty in solving the MSE lies in the non-linearity of $\mSurfDisc{\cdot}$. Since it is not possible, to directly invert for $z^h = \left(\mathtt{F}^h\right)\inv 0$, one needs to use a procedure such as Newton-Raphson iterations. The main idea is to use some initial guess $z^h_0$, while in general, $\mSurfDisc{z^h_0}=r^h_k\neq0$. The goal is then to generate a sequence of $z^h_k$ such that $r^h_k\to 0$ for increasing, but reasonably small $k$. Algorithm~\ref{algo:standard-newton} shows the standard Newton-Raphson procedure, that takes as input a specific initial guess (here: 0), a tolerance for convergence \textsc{tol} and the nonlinear operator $\mSurfDisc{\cdot}$, outputting an approximate solution to the MSE $z^h_{k_\text{fin}}$.
 \begin{algorithm}
 	\caption{Newton's method applied on the discrete MSE}\label{algo:standard-newton}
 	\begin{algorithmic}
@@ -236,12 +266,14 @@ Note, that the discrete equation is not anymore consistent with the right-hand-s
 This algorithm involves the computation of the inverse of the gradient of $\mSurfDisc{z^h_k}$ for each iteration $k$. Later, we will present and compare two different ways on how to contrive this.
 
 It is well known, that the Newton-Raphson procedure yields fast convergence, but the success of this convergence is highly dependent on the initial guess $z^h_0$. Furthermore, convergence can be improved by choosing an initial guess that is closer to the solution. 
-To this end, recall the MSE, equation \eqref{eq:MSE}. Considering only linear terms, we get 
+One possible initial guess is to take the average boundary value, \\$z^h_{0,\text{ave}}=\frac{1}{|\partial\Omega^h|} \sum_{(x_i,y_j)\in \partial\Omega^h} \big(g(x_i,y_j)\big)$. While this might help convergence for surfaces, that have a certain offset with respect to the $x,y$-plane, it does not provide any additional information (such as preshaping curvature).
+
+To obtain a more educated initial guess, recall the MSE, equation \eqref{eq:MSE}. Considering only linear terms, we get 
 \begin{align}
-	\mathcal{L} [z] = z_{xx} + z_{yy} &= 0 \quad \text{ in }& \Omega \\
-	z(x,y) &= g(x,y) \quad \text{ on }& \partial\Omega \notag 
-\end{align}
-This linear, second order PDE is well known as the Laplace-equation, and can be solved by discretizing the second derivatives using the definitions for $\Dxx{\cdot},\Dyy{\cdot}$ introduced before, and get $\mathtt{L}[z^h]=0 $. Since Laplace's equation can be regarded as a linearization of the MSE, we suspect to get a better initial guess (and thus faster and a more robust convergence behaviour) by first solving for $z^h_0= \mathtt{L}\inv 0$ . This way, we obtain a slightly modified version of Algorithm~\ref{algo:standard-newton}, stated in Algorithm~\ref{algo:laplace-newton}.
+	\mathcal{L} [z] = z_{xx} + z_{yy} &= 0 \quad\quad\quad\quad \text{ in } \Omega \\
+	z(x,y) &= g(x,y) \quad \text{ on } \partial\Omega \notag 
+\end{align}\newpage
+This linear, second order PDE is well known as the Laplace-equation, and can be solved by discretizing the second derivatives using the definitions for $\Dxx{\cdot},\Dyy{\cdot}$ introduced before, yielding $\mathtt{L}[z^h]=0 $ with the usual boundary conditions. Since Laplace's equation can be regarded as a linearization of the MSE, we suspect to get a better initial guess (and thus faster and a more robust convergence behaviour) by first solving for $z^h_0= \mathtt{L}\inv 0$. This way, we obtain a slightly modified version of Algorithm~\ref{algo:standard-newton}, stated in Algorithm~\ref{algo:laplace-newton}.
 
 \begin{algorithm}
 	\caption{Newton's method using Laplace's Equ. as initial guess}\label{algo:laplace-newton}
@@ -257,11 +289,49 @@ This linear, second order PDE is well known as the Laplace-equation, and can be 
 	\end{algorithmic}
 \end{algorithm}
 
-The latter two algorithms require both to determine the full Jacobian. But this would not necessarily be required to solve our problem.
-$\rightarrow$ matrix-free BiCGSTAB
-
 \subsection{Consequences for a implementation}
+So far we discussed the abstract numerical setting to solve the MSE. But when implementing this as a software solution, one has to consider several additional points, which especially involve the interface to the user.
 
+\begin{figure}
+	\centering
+	\begin{tikzpicture}[node distance=4cm, auto]
+	% Place nodes
+	\node [block] (code) {Code/Solver};
+	\node [cloud, left of=code, node distance=3cm] (in) {user input};
+	\node [cloud, right of=code, node distance=3.5cm] (out) {output to user};
+	%
+	\path [line] (in) -- (code);
+	\path [line] (code) -- (out);
+	
+	\node [cheap, below of=in](inputLegend) at(-3.6,0.3) {
+		\small\begin{itemize}
+		\item mesh size 
+		\item Boundary conditions 
+		\item \dots
+		\end{itemize}
+		$\rightarrow$ user interface \\ via input file \normalsize
+	};
+	
+	\node [cheap, below of=code] (solverLegend) at(0,0.25) {%
+		\small\begin{itemize}
+		\item discretization/grid 
+		\item apply BC 
+		\item determine Jacobian 
+		\item solve linear systems 
+		\item Newton iterations  \normalsize
+		\end{itemize}
+	};
+	
+	\node [cheap, below of = out] (outLegend) at(3.5, 0.3) {
+		\small\begin{itemize}
+		\item visualization of solution 
+		\item convergence output (residual) 
+		\item check validity of result
+		\end{itemize}\normalsize
+	};
+	\end{tikzpicture}
+	\caption{Requirements on a potential implementation}
+\end{figure}
 % #########################################################################
 \section{Implementation}
 
@@ -272,7 +342,7 @@ How we implemented things, ...
 
 either change the name of "Dependencies" of make sure to explain it like during the Q\&A-session
 
-\subsection{Computing the Jacobian}
+\subsection{Computing the Jacobian and solving linear systems}
 @Chenfei, briefly explain like in the presentation the three methods, and also name that one could use Finite Differences, but this is expected to perform bad (because...), and thus we do not use it (the next lines are already a few months old, use them or get rid of them)
 
 Within the Newton iterations, it is necessary to compute the inverse of the Jacobian of the discrete MSO. We implemented this procedure following two different strategies:
@@ -288,6 +358,11 @@ Within the Newton iterations, it is necessary to compute the inverse of the Jaco
 Argue that, since $\nabla F$ is not symmetric in general, need stabilized CG (better performance than GMRES according to Eigen library)
 
 
+
+	\textbf{I tested a bit now, and will push also to the code, timings ideally after that:
+	seems like sparseLU is faster for getting the initial guess, so I will implement that.\\
+	for the loops, bicgstab is still advantageous as we can greatly reduce TOL\_linsolver.}
+\normal
 \subsection{Testing}
 @Praveen
 here the figure as in the presentation, short explanation (basically what you said)
