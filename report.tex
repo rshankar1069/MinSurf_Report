@@ -50,7 +50,7 @@
 % ---------------------  Title page setup ----------------------------
 % Title Page
 \title{Minimal Surfaces}
-\author{Chenfei Fan \\  Praveen Mishra \\ Sankarasubramanian Ragunathan\\ Philipp Schleich}
+\author{add your matriculation numbers here!\\Chenfei Fan \\  Praveen Mishra \\ Sankarasubramanian Ragunathan\\ Philipp Schleich\quad 391779}
 %
 \subject{Report \\ Simulation Sciences Laboratory}
 \date{\today \\ \vspace{0.9cm}}
@@ -83,11 +83,11 @@
 \begin{document}
 \maketitle
 
-\section*{Abstract}
-\begin{abstract}
-\noindent Abstract might be unnecessary
-\end{abstract}
-
+%\section*{Abstract}
+%\begin{abstract}
+%\noindent Abstract might be unnecessary
+%\end{abstract}
+%
 \clearpage
 \protect \tableofcontents
 
@@ -98,7 +98,7 @@
 \onehalfspacing
 % #########################################################################
 \section{Introduction}
-...
+@Sankar, sth like in the presentation
 % #########################################################################
 \section{Background}
 \subsection{General background (don't like this title)}
@@ -260,10 +260,20 @@ This linear, second order PDE is well known as the Laplace-equation, and can be 
 The latter two algorithms require both to determine the full Jacobian. But this would not necessarily be required to solve our problem.
 $\rightarrow$ matrix-free BiCGSTAB
 
+\subsection{Consequences for a implementation}
+
 % #########################################################################
 \section{Implementation}
 
 How we implemented things, ...
+
+\subsection{Software/Solver Design}
+@Sankar, here the UML chart + explain the "flow"
+
+either change the name of "Dependencies" of make sure to explain it like during the Q\&A-session
+
+\subsection{Computing the Jacobian}
+@Chenfei, briefly explain like in the presentation the three methods, and also name that one could use Finite Differences, but this is expected to perform bad (because...), and thus we do not use it (the next lines are already a few months old, use them or get rid of them)
 
 Within the Newton iterations, it is necessary to compute the inverse of the Jacobian of the discrete MSO. We implemented this procedure following two different strategies:
 \begin{itemize}
@@ -277,27 +287,35 @@ Within the Newton iterations, it is necessary to compute the inverse of the Jaco
 
 Argue that, since $\nabla F$ is not symmetric in general, need stabilized CG (better performance than GMRES according to Eigen library)
 
-a nice flowchart (can be maybe done in powerpoint, easier here) on how the code works, plus explanations
 
-test cases -> this might aswell be mentioned in results (the larger testcases)
+\subsection{Testing}
+@Praveen
+here the figure as in the presentation, short explanation (basically what you said)
 
+maybe 1-2 results of tests, short explanation
+
+checking of validity by means of scherk, present a result here
 
 % #########################################################################
-\section{Results, benchmark}
-A few nice pictures for stuff
-
-timing benchmarks for different approaches (openMP and not), compare to matlab maybe
-
+\section{Results}
+@Praveen you can refer to Scherk from General background, 
+results for the 2 testcases, some timings (for all solvers for a choice of $\#$gridpoints, not too many), scaling of the three (fix $\#$gridpoints to sth $>500$ for jacOption 0,1 and maybe max. 200-300 for 2, and run for 1,2,4,8,16 threads)
+once timings are implemented, you can also ask us to help determine times (consistent TOL's etc...)
 
 
 % #########################################################################
 \section{Conclusions and outlook}
-Some wise words, on what how can we extend stuff, ...
+pretty much what we had in the presentation
+
+@all, feel free to add ideas here, I would merge it together in the end
 
 % #########################################################################
 
 %
 \bibliography{bibliography}
 
+\appendix
+\section{User manual @Philipp}
+short explanation of the params inthe input file, and how to run simulations
 
 \end{document}          
