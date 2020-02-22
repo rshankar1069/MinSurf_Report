@@ -6,11 +6,13 @@
 \contentsline {subsubsection}{\numberline {2.2.1}Discretization}{5}{subsubsection.2.2.1}
 \contentsline {subsubsection}{\numberline {2.2.2}Solution}{7}{subsubsection.2.2.2}
 \contentsline {subsection}{\numberline {2.3}Consequences for a implementation}{9}{subsection.2.3}
-\contentsline {section}{\numberline {3}Implementation}{9}{section.3}
-\contentsline {subsection}{\numberline {3.1}Software/Solver Design}{9}{subsection.3.1}
-\contentsline {subsection}{\numberline {3.2}Computing the Jacobian}{9}{subsection.3.2}
+\contentsline {section}{\numberline {3}Implementation}{10}{section.3}
+\contentsline {subsection}{\numberline {3.1}Software/Solver Design}{10}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Computing the Jacobian}{10}{subsection.3.2}
 \contentsline {subsection}{\numberline {3.3}Solving linear systems}{11}{subsection.3.3}
 \contentsline {subsection}{\numberline {3.4}Testing}{11}{subsection.3.4}
 \contentsline {section}{\numberline {4}Results}{12}{section.4}
 \contentsline {section}{\numberline {5}Conclusions and outlook}{12}{section.5}
-\contentsline {section}{\numberline {A}User manual @Philipp}{12}{appendix.A}
+\contentsline {section}{\numberline {A}User manual @Philipp}{13}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Compilation}{13}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Running a simulation}{13}{subsection.A.2}

@@ -266,7 +266,7 @@ The main difficulty in solving the MSE lies in the non-linearity of $\mSurfDisc{
 This algorithm involves the computation of the inverse of the gradient of $\mSurfDisc{z^h_k}$ for each iteration $k$. Later, we will present and compare two different ways on how to contrive this.
 
 It is well known, that the Newton-Raphson procedure yields fast convergence, but the success of this convergence is highly dependent on the initial guess $z^h_0$. Furthermore, convergence can be improved by choosing an initial guess that is closer to the solution. 
-One possible initial guess is to take the average boundary value, \\$z^h_{0,\text{ave}}=\frac{1}{|\partial\Omega^h|} \sum_{(x_i,y_j)\in \partial\Omega^h} \big(g(x_i,y_j)\big)$. While this might help convergence for surfaces, that have a certain offset with respect to the $x,y$-plane, it does not provide any additional information (such as preshaping curvature).
+One possible initial guess is to take the average boundary value, \\$z^h_{0,\text{ave}}=\frac{1}{|\partial\Omega^h|} \sum_{(x_i,y_j)\in \partial\Omega^h} \big(g(x_i,y_j)\big)$. While this might help convergence for surfaces, that have a certain offset with respect to the $x,y$-plane, it does not provide any additional information (such as preshaping the correct curvature).
 
 To obtain a more educated initial guess, recall the MSE, equation \eqref{eq:MSE}. Considering only linear terms, we get 
 \begin{align}
@@ -293,6 +293,8 @@ This linear, second order PDE is well known as the Laplace-equation, and can be 
 \subsection{Consequences for a implementation}
 So far we discussed the abstract numerical setting to solve the MSE. But when implementing this as a software solution, one has to consider several additional points, which especially involve the interface to the user.
 
+We provide an overview of requirements for a potential implementation in figure~\ref{fig:requs}.
+
 \begin{figure}[b]
 	\centering
 	\begin{tikzpicture}[node distance=4cm, auto]
@@ -304,11 +306,11 @@ So far we discussed the abstract numerical setting to solve the MSE. But when im
 	\path [line] (in) -- (code);
 	\path [line] (code) -- (out);
 	
-	\node [cheap, below of=in](inputLegend) at(-3.8,0.3) {
+	\node [cheap, below of=in](inputLegend) at(-3.95,0.3) {
 		\small\begin{itemize}
 		\item mesh size 
 		\item boundary conditions 
-		\item \dots
+		\item various tuning parameters
 		\end{itemize}
 		$\rightarrow$ user interface \\ via input file \normalsize
 	};
@@ -331,8 +333,16 @@ So far we discussed the abstract numerical setting to solve the MSE. But when im
 		\end{itemize}\normalsize
 	};
 	\end{tikzpicture}
-	\caption{Requirements on a potential implementation}
+	\caption{Requirements on a potential implementation}\label{fig:requs}
 \end{figure}
+We can divide communication with the user into user input and output to the user. A input interface can be realized e.g. as a GUI (graphical user interface) or as a input file (text file, that is parsed before/while running the simulations). Either realization serves the purpose to give the user a convenient possibility to set the main simulation parameters such as grid size and boundary conditions, as well as to set several tuning parameters like number of threads for parallel execution, initial guess.
+
+The output to the user further is crucial in the sense that without giving the user any opportunity to perceive the result of the computation, there is no point in even computing anything. In terms of our application, it is required to provide the result in a form that can easily be visualized as a 3D-object. Additionally, one might want to offer a convenient validity-check and information about convergence.
+
+Last but not least, a software implementation also needs to be able to perform all of the key steps to solve the MSE: It must allow for a discretizaion of the computational domain, and for setting the desired values on its boundary. Apart from implementing a suitable initial guess, inside a loop such as Algorithms~\ref{algo:standard-newton},~\ref{algo:laplace-newton} there are a few important tasks missing that require special consideration: Both computing the Jacobian $\nabla\mSurfDisc{\cdot}$ and solving the resulting linear systems are non-trivial necessities whose treatment will be discussed in more detail in the next chapter. 
+
+
+\clearpage
 % #########################################################################
 \section{Implementation}
 
@@ -410,7 +420,7 @@ Argue that, since $\nabla F$ is not symmetric in general, need stabilized CG (be
 	\textbf{I tested a bit now, and will push also to the code, timings ideally after that:
 	seems like sparseLU is faster for getting the initial guess, so I will implement that.\\
 	for the loops, bicgstab is still advantageous as we can greatly reduce TOL\_linsolver.}
-\normal
+\normalfont
 \subsection{Testing}
 @Praveen
 here the figure as in the presentation, short explanation (basically what you said)
@@ -436,9 +446,34 @@ pretty much what we had in the presentation
 
 %
 \bibliography{bibliography}
-
+\clearpage
 \appendix
-\section{User manual @Philipp}
-short explanation of the params inthe input file, and how to run simulations
+\section{User manual}
+This section provides a short description on how to run the code. The software accompanying this report is self-contained and guaranteed to run on the RWTH cluster, using either the current versions of the Intel (19) or GCC (9) compiler.
+
+\subsection{Compilation}
+To compile the code, open a terminal inside \texttt{source/}. 
+\lstset{backgroundcolor=\color{gray!20}, language=bash, basicstyle=\ttfamily}
+\begin{lstlisting}
+	cd build 
+	cmake .. 
+	make
+\end{lstlisting}
+The standard setup is the CMAKE compile option \texttt{Release} admitting some compiler optimization. If some additional debug information is desired, change the option to \texttt{debug} inside \texttt{CMakeLists.txt}.
+\subsection{Running a simulation}
+To run a simulation, go to the folder testcases or create a new folder with a valid \texttt{params.in}-file.
+
+Inside this \texttt{params.in}-file, one can find the options to set with descriptions.
+
+\noindent To run the a simulation, execute the following, once the input file is set up:
+\lstset{backgroundcolor=\color{gray!20}, language=bash, basicstyle=\ttfamily, breaklines=true}
+\begin{lstlisting}
+	cd <folder with params.in> 
+	export NAG_KUSARI_FILE=<path to nag_key.txt>        # needed if jacobianOpt=2 
+	ln -s <path to executable minSurf in build/> .      # symbolic link for convenient execution 
+	./minSurf
+\end{lstlisting}
+Now, the resulting output can be inspected by opening the \texttt{.vts}-files inside \texttt{surfaces/} using Paraview\footnote{to use this on the cluster, execute \texttt{module load GRAPHICS paraview} beforehand.}. If one is interesting in the convergence, one can find the residual data over iteration inside \texttt{residual/}, which can be also plotted using Paraview. 
+
 
 \end{document}          
