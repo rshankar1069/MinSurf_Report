@@ -42,7 +42,7 @@ text width=4.5em, text badly centered, node distance=3cm, inner sep=0pt]
 \tikzstyle{block} = [rectangle, draw, fill=blue!20, 
 text width=6em, text centered, rounded corners, minimum height=4em]
 \tikzstyle{cheap} = [rectangle,  
-text width=10em, text centered, minimum height=4em, node distance=3cm]
+text width=12em, text centered, minimum height=4em, node distance=3cm]
 \tikzstyle{line} = [draw, -latex']
 \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
 minimum height=2em]
@@ -289,10 +289,11 @@ This linear, second order PDE is well known as the Laplace-equation, and can be 
 	\end{algorithmic}
 \end{algorithm}
 
+\clearpage
 \subsection{Consequences for a implementation}
 So far we discussed the abstract numerical setting to solve the MSE. But when implementing this as a software solution, one has to consider several additional points, which especially involve the interface to the user.
 
-\begin{figure}
+\begin{figure}[b]
 	\centering
 	\begin{tikzpicture}[node distance=4cm, auto]
 	% Place nodes
@@ -303,10 +304,10 @@ So far we discussed the abstract numerical setting to solve the MSE. But when im
 	\path [line] (in) -- (code);
 	\path [line] (code) -- (out);
 	
-	\node [cheap, below of=in](inputLegend) at(-3.6,0.3) {
+	\node [cheap, below of=in](inputLegend) at(-3.8,0.3) {
 		\small\begin{itemize}
 		\item mesh size 
-		\item Boundary conditions 
+		\item boundary conditions 
 		\item \dots
 		\end{itemize}
 		$\rightarrow$ user interface \\ via input file \normalsize
@@ -322,7 +323,7 @@ So far we discussed the abstract numerical setting to solve the MSE. But when im
 		\end{itemize}
 	};
 	
-	\node [cheap, below of = out] (outLegend) at(3.5, 0.3) {
+	\node [cheap, below of = out] (outLegend) at(3.8, 0.3) {
 		\small\begin{itemize}
 		\item visualization of solution 
 		\item convergence output (residual) 
@@ -342,7 +343,7 @@ How we implemented things, ...
 
 either change the name of "Dependencies" of make sure to explain it like during the Q\&A-session
 
-\subsection{Computing the Jacobian and solving linear systems}
+\subsection{Computing the Jacobian}
 @Chenfei, briefly explain like in the presentation the three methods, and also name that one could use Finite Differences, but this is expected to perform bad (because...), and thus we do not use it (the next lines are already a few months old, use them or get rid of them)
 
 Within the Newton iterations, it is necessary to compute the inverse of the Jacobian of the discrete MSO. We implemented this procedure following two different strategies:
@@ -358,6 +359,53 @@ Within the Newton iterations, it is necessary to compute the inverse of the Jaco
 Argue that, since $\nabla F$ is not symmetric in general, need stabilized CG (better performance than GMRES according to Eigen library)
 
 
+		\begin{algorithm}[H]
+			\caption{Newton's method}
+			\begin{algorithmic}
+				\State $y \gets \mathtt{F}(z)$ 
+				\While{$\lVert y \rVert > \textsc{tol}$} 
+				\State $A = \nabla \mathtt{F}(z)$ 
+				\State \color{blue} $dz = A\inv y$  \normalcolor \Comment{Instead of assembling the whole $\nabla \mathtt{F}$ above, do this matrix-free}
+				\State $z \gets z + dz$
+				\State $\mathtt{res} \gets \mathtt{F}(z)$ 
+				\EndWhile
+			\end{algorithmic}
+		\end{algorithm}
+		\begin{algorithm}[H]
+			\caption{Matrix-free BiCGSTAB to get $dz$ (adapted from \cite{naumann})}
+			\small{	\begin{algorithmic}
+					\State $z^{(1)} \gets dz$ 
+					\State \color{blue}$(y, y^{(1)}) \gets \mathtt{F}^{(1)} (z, z^{(1)}) $ \normalcolor \Comment{DCO}
+					\State $p \gets -y -y^{(1)}$
+					\State $r \gets p, r_0\gets r, \rho\gets1,\alpha\gets1,\omega\gets1 $
+					\While{$\lVert r \rVert > \textsc{tol}$} 
+					\State $\rho_{\text{new}} = \big(r_0,r\big)$
+					\State $z^{(1)} \gets p$
+					\State $\beta \gets \rho_{\text{new}}/\rho \cdot \alpha/\omega$
+					\State $\rho \gets \rho_{\text{new}}$
+					\State $p\gets r+\beta(p-\omega v)$
+					\State $z^{(1)} \gets p$
+					\State \color{blue}$(y, y^{(1)}) \gets \mathtt{F}^{(1)} (z, z^{(1)}) $ \normalcolor \Comment{DCO}
+					\State $\alpha \gets \rho/\big(r_0,y^{(1)}\big)$ 
+					\State $dz \gets dz + \alpha p$
+					\State $s\gets r - \alpha y^{(1)}$
+					\State $z_1 \gets z + dz$
+					\State \color{blue}$(y_1, y_1^{(1)}) \gets \mathtt{F}^{(1)} (z_1, z_1^{(1)}) $ \normalcolor \Comment{DCO}
+					\If{$\lVert y_1 \rVert < \textsc{tol} $}
+					\State abort \Comment{Converged at intermediate level}
+					\EndIf
+					\State $z^{(1)} \gets s$
+					\State \color{blue}$(y, y^{(1)}) \gets \mathtt{F}^{(1)} (z, z^{(1)}) $ \normalcolor \Comment{DCO}
+					\State $\omega \gets \big(y^{(1)}, s \big) / \big(y^{(1)}, y^{(1)} \big)$
+					\State $dz \gets dz + \omega s$
+					\State $r \gets s - \omega y^{(1)}$
+					\State $z \gets z + dz$
+					\EndWhile
+			\end{algorithmic}}
+		\end{algorithm}
+
+
+\subsection{Solving linear systems}
 
 	\textbf{I tested a bit now, and will push also to the code, timings ideally after that:
 	seems like sparseLU is faster for getting the initial guess, so I will implement that.\\
