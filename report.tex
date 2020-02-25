@@ -27,6 +27,7 @@
 \usepackage{amssymb}
 \usepackage{adjustbox}
 
+\usepackage{float}
 \usepackage{mathtools}
 \usepackage{epigraph}
 \usepackage{setspace}
@@ -47,6 +48,7 @@ text width=12em, text centered, minimum height=4em, node distance=3cm]
 \tikzstyle{cloud} = [draw, ellipse,fill=red!20, node distance=3cm,
 minimum height=2em]
 
+\bibliographystyle{unsrt}
 
 % ----------------- Layout stuff  -------------------------------
 
@@ -61,7 +63,7 @@ minimum height=2em]
 % ---------------------  Title page setup ----------------------------
 % Title Page
 \title{Minimal Surfaces}
-\author{add your matriculation numbers here!\\Chenfei Fan \\  Praveen Mishra \\ Sankarasubramanian Ragunathan\\ Philipp Schleich\quad 391779}
+\author{add your matriculation numbers here!\\Chenfei Fan \\  Praveen Mishra \\ Sankarasubramanian Ragunathan\quad 389851\\ Philipp Schleich\quad 391779}
 %
 \subject{Report \\ Simulation Sciences Laboratory}
 \date{\today \\ \vspace{0.9cm}}
@@ -109,7 +111,21 @@ minimum height=2em]
 \onehalfspacing
 % #########################################################################
 \section{Introduction}
-@Sankar, sth like in the presentation
+\textit{A Minimal Surface is defined as a surface that has zero mean curvature}. A minimal surface is characterized as surface of minimal surface area for the given boundary conditions.For example, a plane is a trivial minimal surface.
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\linewidth]{./figs/minsurfIntro.png}
+	\caption{A \textit{Minimal Surface} with the local area vector that is to be minimized.}
+\end{figure}
+The minimal surface is obtained as a solution to the Lagrange's equation (also known as the \textit{Minimal-Surface Equation} (MSE)) given by:
+\begin{align}
+	(1 + z_{y}^{2})z_{xx} - 2z_{x}z_{y}z_{xy} + (1+z_{x}^{2})z_{yy} = \mathcal{F}[z] &= 0 && \text{in} \; \Omega \\
+	\notag
+	z(x,y) &= g(x,y) && \text{on} \; \partial \Omega
+\end{align}
+MSE is a Nonlinear Elliptic PDE that has a combination of first and second order differential terms in both $x$ and $y$. Being a nonlinear PDE, we do not readily obtain an analytical solution necessitating the use of numerical methods, such as linearization of MSE using Newton-Raphson iterations, to solve the problem. It is also important to bear in mind that as $z$ has second order derivative terms, we need $z \in \mathcal{C}^{2}$ which means that we need to provide smooth enough boundary conditions on $\partial \Omega$ in order to be able to compute the derivative terms in MSE.
+
+MSE is used in designing structures that have great tensile strength and also to minimize the cost of construction as structural designs resulting from MSE require less material. MSE is also used to provide a relativistic description on the formation of Black Holes. Material lattice structures of biological organisms such as butterfly wings are minimal surface structures (Butterfly wings have a Gyroidal minimal surface). Hydrophobic  co-polymer structures also take the shape of a minimal surface in order to reduce the energy of the structure arising due to surface tension. 
 % #########################################################################
 \section{Background}
 \subsection{General background (don't like this title)}
@@ -345,14 +361,22 @@ Last but not least, a software implementation also needs to be able to perform a
 \clearpage
 % #########################################################################
 \section{Implementation}
-
-How we implemented things, ...
-
+%##########################################################################
 \subsection{Software/Solver Design}
-@Sankar, here the UML chart + explain the "flow"
+\begin{figure}[H]
+	\includegraphics[width=\textwidth]{./figs/ReportUML.pdf}
+	\caption{UML Diagram showing the strucuture of the \textit{Minimal Surface} software.}
+	\label{fig:UMLDiag}
+\end{figure}
 
-either change the name of "Dependencies" of make sure to explain it like during the Q\&A-session
-
+Figure \ref{fig:UMLDiag} shows the structure of the software, the classes and their associated functions, developed in order to solve the minimal surface problem. 
+\begin{itemize}
+	\item {\textbf{inputParser:} This class consists of functions necessary to read all the parameters required to control and execute the minimal surface software. This class takes in \texttt{params.in} which contains all the necessary parameters such as the \# of mesh elements, boundary conditions, option for the method of Jacobian computation etc... as an input to be parsed and processed. This class also depends on an external library, \texttt{ATMSP Expression Parser}, to parse the boundary conditions.}
+	\item {\textbf{cartesianGrid:} This class consists of functions that help in the generation of a uniform cartesian mesh required for solving the FD problem. It also has functions required to return the $x$ and $y$ coordinates of a node required to apply the boundary conditions. It also provides function calls to allocate separate storage of boundary and inner node indices.}
+	\item {\textbf{solver:} This class consists of functions required to solve the minimal surface problem using Newton-Raphson method. The function to apply the boundary conditions is specified inside this class. \texttt{ATMSP Expression Parser} library is again required for this as the library provides methods to parse the boundary condition given as a string expression inside \texttt{params.in} into an executable byte code. It also uses \texttt{DCO} library to compute the Jacobian required for the  Newton Raphson iterations. Separate function definitions are created to run the solver for different options of Jacobian such as Symbolic differentiation, AD by Hand and Matrix-free methods based on the option provided inside \texttt{params.in}}
+	\item  {\textbf{postProcessor:} This class consists of functions designed to write the solver residual as a CSV file and the resulting minimal surface as a VTS file to be visualized inside \textit{Paraview}. To write the VTS file, the class uses the \texttt{VTK} library. The class also provides a function to compare the convergence of FD to analytical solution for the special case of a Scherk surface where the convergence rate is measured using both the \textit{Max Norm} as well as the  \textit{l2-Norm}.}
+\end{itemize}
+%##########################################################################
 \subsection{Computing the Jacobian}
 @Chenfei, briefly explain like in the presentation the three methods, and also name that one could use Finite Differences, but this is expected to perform bad (because...), and thus we do not use it (the next lines are already a few months old, use them or get rid of them)
 
