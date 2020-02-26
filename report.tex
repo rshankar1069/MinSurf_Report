@@ -90,6 +90,9 @@ minimum height=2em]
 \newcommand{\Dxy}[1]{\ensuremath{\mathtt{d}_{xy}[#1]}}
 
 \newcommand{\inv}{\ensuremath{^{-1}}}
+\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\rb}[1]{\left( #1 \right)}
+\newcommand{\cb}[1]{\left \{ #1 \right \}}
 
 \begin{document}
 \maketitle
@@ -116,7 +119,7 @@ minimum height=2em]
 We look at surfaces in $ \mathbb{R}^3 $, defined over an open set $\Omega \subset \mathbb{R}^2$. 
 The surface of desire should contain the least possible area among all possible surfaces, that assume given values on the boundary of $\Omega$, denoted by $\partial \Omega$. \cite{Sakai1976}
 
-Lagrange showed in 1760, that such a surface is characterized by the graphic of a function $z(x,y)$, $z: \mathbb{R}^2 \to \mathbb{R} $, which is twice continuously differentiable on a twodimensional domain, particularly in a subset of $\mathbb{R}^2$.
+Lagrange showed in 1760, that such a surface is characterized by the graphic of a function $z(x,y)$, $z: \mathbb{R}^2 \to \mathbb{R} $, which is twice continuously differentiable on a two-dimensional domain, particularly in a subset of $\mathbb{R}^2$.
 This function $z$ has to fulfill the so called \textit{Minimal-Surface Equation} (MSE) stated below.
 \begin{align}\label{eq:MSE}
 	(1+z_y^2) z_{xx} - 2 z_x z_y z_{xy} + (1+z_x^2)z_{yy} = \mSurf{z} &= 0 \quad &\text{in } \Omega \\
@@ -162,6 +165,7 @@ Later on, we will use this surface as a test-case to verify our numerical result
 \newpage
 \subsection{Numerical solution}
 \subsubsection{Discretization}
+\label{section:Discretization}
 In this project, we are supposed to solve the MSE numerically on $\Omega \equiv (0,1)\times(0,1)$. In the following, discretized quantities are indicated by a superscript $h$. The spatial domain is to be discretized using a structured mesh with equidistant grid spacing both in $x,y$, i.e. we have the same number of grid points in both directions, $N=N_x=N_y$. Thus, we define $\Omega^h := \{ (x,y) \in \mathbb{R}^2:\text{ }(x,y) = (ih, jh), \text{ } 0 \le i,j < N,\text{ }hN=1\}$.
 
 \begin{figure}[h!]
@@ -231,11 +235,11 @@ This way, we obtain a discrete version of \eqref{eq:MSE}:
 \end{align}
 while the stencils defined on the inner nodes are given as follows ($1 \le i,j \le N-1$):
 \begin{align}
-	\Dx{z} &= \frac{z_{i+1,j}-z_{i-1,j}}{2h} \\
-	\Dy{z} &= \frac{z_{i,j+1}-z_{i,j-1}}{2h} \\
-	\Dxx{z} &= \frac{z_{i+1,j} - 2z_{i,j} + z_{i-1,j}}{h^2}\\
-	\Dyy{z} &= \frac{z_{i,j+1} - 2z_{i,j} + z_{i,j-1}}{h^2}\\
-	\Dxy{z} &= \frac{z_{i+1,j+1} + z_{i-1,j-1} - z_{i-1,j+1}-z_{i+1,j-1}}{4h^2}. 
+	\Dx{z}_{i,j} &= \frac{z_{i+1,j}-z_{i-1,j}}{2h}\label{eq:dx} \\
+	\Dy{z}_{i,j} &= \frac{z_{i,j+1}-z_{i,j-1}}{2h}\label{eq:dy} \\
+	\Dxx{z}_{i,j} &= \frac{z_{i+1,j} - 2z_{i,j} + z_{i-1,j}}{h^2}\label{eq:dxx}\\
+	\Dyy{z}_{i,j} &= \frac{z_{i,j+1} - 2z_{i,j} + z_{i,j-1}}{h^2}\label{eq:dyy}\\
+	\Dxy{z}_{i,j} &= \frac{z_{i+1,j+1} + z_{i-1,j-1} - z_{i-1,j+1}-z_{i+1,j-1}}{4h^2}\label{eq:dxy}. 
 \end{align}
 Figure~\ref{fig:fdmmesh} depicts the stencils on a segment of $\Omega^h$.
 Since the stencils have only support to the nearest neighbors, there is no need tho treat nodes close to the boundary any different. Furthermore, this gives already rise to the conclusion, that the associated matrix will be sparse (for each of the $N$ gridpoints, only 9 instead of $N$ partners contribute).
@@ -354,66 +358,157 @@ How we implemented things, ...
 either change the name of "Dependencies" of make sure to explain it like during the Q\&A-session
 
 \subsection{Computing the Jacobian}
-@Chenfei, briefly explain like in the presentation the three methods, and also name that one could use Finite Differences, but this is expected to perform bad (because...), and thus we do not use it (the next lines are already a few months old, use them or get rid of them)
-
-Within the Newton iterations, it is necessary to compute the inverse of the Jacobian of the discrete MSO. We implemented this procedure following two different strategies:
+Within the Newton iterations, it is necessary to compute the inverse of the Jacobian of the discrete MSO and solve the resulting linear systems. One well-known approach is using Finite Differences to further discretise the discrete MSO, but it is not efficient when the mesh is very fine. As a result, Algorithmic Differentiation is used in this problem. We implemented this procedure following two different strategies:
 \begin{itemize}
-	\item Based on generating the Jacobian matrix $\nabla\mSurfDisc{z^h_k}$ and computing its inverse
-	\begin{itemize}
-		\item Hard-code a manually calculated Jacobian (to verify results)
-		\item Build a Jacobian matrix from Automatic Differention (AD by hand)
-	\end{itemize}
-	\item Based on a linear iterative scheme, where we do not explicitly build the Jacobian, but extract its action on certain vectors from AD and feed this to a linear iterative solver
+	\item Build the Jacobian by Algorithmic Differentiation (AD by hand) and compute its inverse by existing linear solvers.
+	\item Do not explicitly build the Jacobian, but use existing AD libraries to multiply it with vectors. Substitute this into the self-implemented matrix-free linear solver.
 \end{itemize}
+To get an overview of the problem's dimensions and properties as well as to provide a solution to verify other approaches based on Algorithmic Differentiation, we first implemented a straightforward ("hard-coded") method to derive the required Jacobian $\nabla \mathtt{F}(z)$ by substituting Equ.~\refeq{eq:dx}-\refeq{eq:dxy} into Equ.~\refeq{eq:dMSE} and taking its derivatives of $\vect{z}$. As is indicated in section~\ref{section:Discretization}, the resulting Jacobian is sparse, so it is stored in \texttt{Eigen::SparseMatrix} format by \texttt{Eigen} library. Then solve $dz = \nabla\mSurfDisc{z^h_k}\inv y$ by Biconjugate gradient stabilized method (BiCGSTAB). It is used instead of BiCG or CG since $\nabla\mSurfDisc{z^h_k}$ is not symmetric in general.
 
-Argue that, since $\nabla F$ is not symmetric in general, need stabilized CG (better performance than GMRES according to Eigen library)
+\subsubsection{AD by hand}
+As is shown in section~\ref{section:Discretization}, the discrete MSO of each gridpoint has only support from its 9 neighbors. Considering the derivation of the Jacobian as a loop of gridpoint-wise MSO over each gridpoint (which is parallelizable in nature), the gridpoint-wise discrete MSO for each gridpoint $(i,j)$ can be generalized as Equ.~\refeq{eq:mso}, where $h$ is a function which has 1 output $\mathtt{F}\rb{z[i][j]}$ and 9 inputs $z[i'][j'], i'\in\{i, i\pm1\}, j'\in\{j,j\pm1\}$. Given this function primal of $ \mathtt{F}: \mathbb{R}^n\rightarrow 1 $ (here $n=9$), it is advantageous to use a first-order adjoint model as Equ.~\refeq{eq:adj1}, \refeq{eq:adj2}. By seeding the output $y_{(1)}$ one can harvest the whole Jacobian row-wise, where one row of the Jacobian has only 9 non-zero entries. The function signature of the overloaded function is stated in Equ.~\refeq{eq:adj}. By the driver function in Equ.~\refeq{eq:adj.driver} (assume an inner gridpoint $(i,j)$ has index $idx$), one column of the Jacobian $a1\_z[idx][:]$ together with the primal $z[idx]$ is harvested for each gridpoint $(i,j)$.
 
+\begin{equation}
+\mathtt{F}\rb{z[i][j]} = h\rb{z[i'][j'], i'\in\{i, i\pm1\}, j'\in\{j,j\pm1\}}\label{eq:mso}
+\end{equation}
 
-		\begin{algorithm}[H]
-			\caption{Newton's method}
-			\begin{algorithmic}
-				\State $y \gets \mathtt{F}(z)$ 
-				\While{$\lVert y \rVert > \textsc{tol}$} 
-				\State $A = \nabla \mathtt{F}(z)$ 
-				\State \color{blue} $dz = A\inv y$  \normalcolor \Comment{Instead of assembling the whole $\nabla \mathtt{F}$ above, do this matrix-free}
-				\State $z \gets z + dz$
-				\State $\mathtt{res} \gets \mathtt{F}(z)$ 
-				\EndWhile
-			\end{algorithmic}
-		\end{algorithm}
-		\begin{algorithm}[H]
-			\caption{Matrix-free BiCGSTAB to get $dz$ (adapted from \cite{naumann})}
-			\small{	\begin{algorithmic}
-					\State $z^{(1)} \gets dz$ 
-					\State \color{blue}$(y, y^{(1)}) \gets \mathtt{F}^{(1)} (z, z^{(1)}) $ \normalcolor \Comment{DCO}
-					\State $p \gets -y -y^{(1)}$
-					\State $r \gets p, r_0\gets r, \rho\gets1,\alpha\gets1,\omega\gets1 $
-					\While{$\lVert r \rVert > \textsc{tol}$} 
-					\State $\rho_{\text{new}} = \big(r_0,r\big)$
-					\State $z^{(1)} \gets p$
-					\State $\beta \gets \rho_{\text{new}}/\rho \cdot \alpha/\omega$
-					\State $\rho \gets \rho_{\text{new}}$
-					\State $p\gets r+\beta(p-\omega v)$
-					\State $z^{(1)} \gets p$
-					\State \color{blue}$(y, y^{(1)}) \gets \mathtt{F}^{(1)} (z, z^{(1)}) $ \normalcolor \Comment{DCO}
-					\State $\alpha \gets \rho/\big(r_0,y^{(1)}\big)$ 
-					\State $dz \gets dz + \alpha p$
-					\State $s\gets r - \alpha y^{(1)}$
-					\State $z_1 \gets z + dz$
-					\State \color{blue}$(y_1, y_1^{(1)}) \gets \mathtt{F}^{(1)} (z_1, z_1^{(1)}) $ \normalcolor \Comment{DCO}
-					\If{$\lVert y_1 \rVert < \textsc{tol} $}
-					\State abort \Comment{Converged at intermediate level}
-					\EndIf
-					\State $z^{(1)} \gets s$
-					\State \color{blue}$(y, y^{(1)}) \gets \mathtt{F}^{(1)} (z, z^{(1)}) $ \normalcolor \Comment{DCO}
-					\State $\omega \gets \big(y^{(1)}, s \big) / \big(y^{(1)}, y^{(1)} \big)$
-					\State $dz \gets dz + \omega s$
-					\State $r \gets s - \omega y^{(1)}$
-					\State $z \gets z + dz$
-					\EndWhile
-			\end{algorithmic}}
-		\end{algorithm}
+\begin{align}
+y &:= \mathtt{F}(\textbf{x})\label{eq:adj1} &&
+\\
+\textbf{x}_{(1)} &:= \nabla \mathtt{F}(\textbf{x})^{T} \cdot y_{(1)}\label{eq:adj2}
+\end{align}
 
+\begin{equation}
+\rb{y, \textbf{x}_{(1)}} := \mathtt{F}_{(1)}\rb{\textbf{x}, y_{(1)}}\qquad \mathtt{F}_{(1)}: \rb{\mathbb{R}^n\times 1}\rightarrow \rb{1\times\mathbb{R}^n}\label{eq:adj}
+\end{equation}
+
+\begin{equation}
+\rb{z[idx],\ a1\_z[idx][:]} = \mathtt{F}\rb{z[:],\ a1\_Fz[idx]}
+\label{eq:adj.driver}
+\end{equation}
+
+The row-wise derivation of the Jacobian inside a loop over all inner gridpoints can be decomposed into a single assignment code (SAC). Example of code snippets for each inner gridpoint if index $i$ are as Code~\ref{lst:prsac}, \ref{lst:adsac}. Because of the sparsity of the Jacobian, the computational complexity for each inner gridpoint is a constant. Therefore, the total computational complexity is $\mathcal{O}(N^2)$ for $N^2$ gridpoints (or to say, $N^2$ rows of the Jacobian).
+
+Same as the "hard-coded" method, we store the derived Jacobian in \texttt{Eigen::SparseMatrix} format and solve the linear system by BiCGSTAB.
+
+Results have proven that we apply Algorithmic Differentiation to the problem and get a feasible result. However, since it is "by hand", it has certain limitations. If the problem is more complex, it is inefficient, or even impossible to manually derive it step by step. A more general approach is still needed to automatically derive the Jacobian without manual computation.
+
+\lstset{backgroundcolor=\color{gray!20}, language=C++, basicstyle=\ttfamily, breaklines=true}
+
+\noindent
+\begin{minipage}[t]{0.45\linewidth}
+\begin{lstlisting}[caption={Adjoint SAC Code for inner gridpoint $i$ (primal/forward)},label=lst:prsac,language=C++]
+// d(...) = fd(x)
+dx = (z[i+1]-z[i-1])/(2*h);
+dy = (z[i+N]-z[i-N])/(2*h);
+dxx, dxy, dyy = ...
+
+// intermidiates v1, v2, v3
+v1 = (1+pow(dx,2))*dyy;
+v2 = -2*dx*dy*dxy;
+v3 = (1+pow(dy,2))*dxx;
+
+// result
+Fz[i] = v1+v2+v3;
+\end{lstlisting}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.53\linewidth}
+\begin{lstlisting}[caption={Adjoint SAC Code for inner gridpoint $i$ (adjoint/reverse)},label=lst:adsac,language=C++]
+(initialize everything to zero)
+// seed a1_Fz
+a1_Fz[i] = 1.0;
+
+// result Fz[i] = v1+v2+v3
+a1_v1 = a1_Fz[i];
+a1_v2 = a1_Fz[i];
+a1_v3 = a1_Fz[i];
+
+// intermidiates v1, v2, v3
+a1_dy = dxx*2*dy*a1_v3;
+a1_dxx = (1+pow(dy,2))*a1_v3;
+...
+
+// d(...) = fd(x)
+a1_z[i][i+1] = a1_dx/(2*h)+...;
+a1_z[i][i-1] = a1_dx/(-2*h)+...;
+...
+\end{lstlisting}
+\end{minipage}
+
+\subsubsection{matrix-free linear solver with \texttt{dco\_c++}}
+\texttt{dco\_c++} is a library that implements Algorithmic Differentiation by overloading in C++. It provides the same function as AD by hand in terms of harvesting the Jacobian. However, if all manual computation is eliminated, it is unable to exploit the sparsity of the Jacobian, so we need $\mathcal{O}(N^4)$ space to store it, which for large $N$ is impossible. Therefore, we implemented a matrix-free linear solver inside Newton's method as described in Algorithm~\ref{algo:matfree-newton}, which does not require explicitly building the Jacobian, but instead apply the vector tangent code overloaded by \texttt{dco\_c++} as a matrix-vector multiplication tool which multiplies the Jacobian with the seed to harvest the result.
+
+In general, the MSO is an operator of $ \mathtt{F}: \mathbb{R}^{N\times N}\rightarrow \mathbb{R}^{N\times N} $, which has the same computational complexity for vector tangent mode and vectors adjoint mode. We choose vector tangent mode in our implementation.
+
+\begin{algorithm}[H]
+	\caption{Newton's method}\label{algo:matfree-newton}
+	\begin{algorithmic}
+		\State $\vect{y} \gets \mathtt{F}(\vect{z})$ 
+		\While{$\lVert \vect{y} \rVert > \textsc{tol}$} 
+		\State $\vect{A} = \nabla \mathtt{F}(\vect{z})$ 
+		\State \color{blue} $\vect{dz} = \vect{A}\inv \vect{y}$  \normalcolor \Comment{Instead of assembling the whole $\nabla \mathtt{F}$ above, do this matrix-free}
+		\State $\vect{z} \gets \vect{z} + \vect{dz}$
+		\State $\mathtt{res} \gets \mathtt{F}(\vect{z})$ 
+		\EndWhile
+	\end{algorithmic}
+\end{algorithm}
+
+The first-order vector tangent mode for $\mathtt{F}: \mathbb{R}^{N\times N}\rightarrow \mathbb{R}^{N\times N} $ is defined as Equ.~\refeq{eq:tg1}, \refeq{eq:tg2}, and its function signature is defined in Equ.~\refeq{eq:tg}. By substituting Equ.~\refeq{eq:tg1} into an existing linear solver (for example BiCGSTAB, as we implemented in Algorithm~\ref{algo:bicgstab}), $\vect{dz} = \vect{A}\inv \vect{y}$ is solved by this iterative approach.
+
+The advantage of the matrix-free linear solver with \texttt{dco\_c++} is that it does not require any prior knowledge of the operator. Given any primal \texttt{y = F(z)} where $ \mathtt{F}: \mathbb{R}^{N\times N}\rightarrow \mathbb{R}^{N\times N} $, only several lines of code is needed for the vector tangent mode by overloading, as is shown in Code~\ref{lst:vot}.
+\begin{lstlisting}[caption={Vectors of Tangents by Overloading},label=lst:vot,language=C++]
+// activate
+std::vector<ADtype> z_(std::begin(z),std::end(z));
+// seed
+for (auto& i: grid.innerNodeList) 
+dco::derivative(z_)[i] = dz[i];
+// compute
+y_ = F(z_); // overloaded
+// harvest
+dy = dco::derivative(y_);
+\end{lstlisting}
+
+\begin{align}
+\textbf{y} &:= \mathtt{F}(\textbf{x})\label{eq:tg1} &&
+\\
+Y^{(1)} &:= \nabla \mathtt{F}(\textbf{x}) \cdot X^{(1)}\label{eq:tg2}
+\end{align}
+\begin{equation}
+\rb{\textbf{y}, Y^{(1)}} := \mathtt{F}^{(1)}\rb{\textbf{x}, X^{(1)}}\qquad \mathtt{F}^{(1)}: \rb{\mathbb{R}^{N\times N}\times \mathbb{R}^{N\times N}}\rightarrow \rb{\mathbb{R}^{N\times N}\times\mathbb{R}^{N\times N}}\label{eq:tg}
+\end{equation}
+
+\begin{algorithm}[H]
+	\caption{Matrix-free BiCGSTAB to get $\vect{dz}$ (adapted from \cite{naumann})}\label{algo:bicgstab}
+	\small{	\begin{algorithmic}
+			\State $\vect{z}^{(1)} \gets \vect{dz}$ 
+			\State \color{blue}$(\vect{y}, \vect{y}^{(1)}) \gets \mathtt{F}^{(1)} (\vect{z}, \vect{z}^{(1)}) $ \normalcolor \Comment{DCO}
+			\State $\vect{p} \gets -\vect{y} -\vect{y}^{(1)}$
+			\State $\vect{r} \gets \vect{p}, \vect{r_0}\gets \vect{r},\vect{p}\gets \vect{0},\vect{v}\gets \vect{0}, \rho\gets1,\alpha\gets1,\omega\gets1 $
+			\While{$\lVert \vect{r} \rVert > \textsc{tol}$} 
+			\State $\rho_{\text{new}} = \big(\vect{r_0},\vect{r}\big)$
+			\State $\beta \gets \rho_{\text{new}}/\rho \cdot \alpha/\omega$
+			\State $\rho \gets \rho_{\text{new}}$
+			\State $\vect{p}\gets \vect{r}+\beta(\vect{p}-\omega \vect{v})$
+			\State $\vect{z}^{(1)} \gets \vect{p}$
+			\State \color{blue}$(\vect{y}, \vect{y}^{(1)}) \gets \mathtt{F}^{(1)} (\vect{z}, \vect{z}^{(1)}) $ \normalcolor \Comment{DCO}
+			\State $\vect{v}\gets \vect{y}^{(1)}$
+			\State $\alpha \gets \rho/\big(\vect{r_0},\vect{v}\big)$ 
+			\State $\vect{dz} \gets \vect{dz} + \alpha \vect{p}$
+			\If{$\lVert \mathtt{F}(\vect{z}+\vect{dz}) \rVert < \textsc{tol} $}
+			\State abort \Comment{Converged at intermediate level}
+			\EndIf
+			\State $\vect{s}\gets \vect{r} - \alpha \vect{v}$
+			\State $\vect{z}^{(1)} \gets \vect{s}$
+			\State \color{blue}$(\vect{y}, \vect{y}^{(1)}) \gets \mathtt{F}^{(1)} (\vect{z}, \vect{z}^{(1)}) $ \normalcolor \Comment{DCO}
+			\State $\omega \gets \big(\vect{y}^{(1)}, \vect{s} \big) / \big(\vect{y}^{(1)}, \vect{y}^{(1)} \big)$
+			\State $\vect{dz} \gets \vect{dz} + \omega \vect{s}$
+			\State $\vect{r} \gets \vect{s} - \omega \vect{y}^{(1)}$
+			\EndWhile
+			\State $\vect{z} \gets \vect{z} + \vect{dz}$
+	\end{algorithmic}}
+\end{algorithm}
+
+There are also drawbacks of the matrix-free linear solver. One is already noted, that it is not as flexible as AD by hand to exploit the structure of the Jacobian (for example, sparsity) to reduce computation and space complexity. It remains an interesting topic for researches. Another issue is that the mostly sequential matrix-free solver is not easy to parallelize. Although there exist some better implementations than ours, it is not user-friendly to require any implementation of linear solvers. For example, if the user knows the Jacobian is symmetric, a CG method which is faster than BiCGSTAB must be implemented from scratch.
 
 \subsection{Solving linear systems}
 
@@ -445,6 +540,7 @@ pretty much what we had in the presentation
 % #########################################################################
 
 %
+\bibliographystyle{apalike}
 \bibliography{bibliography}
 \clearpage
 \appendix
