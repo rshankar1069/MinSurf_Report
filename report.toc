@@ -1,0 +1,25 @@
+\select@language {english}
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
+\contentsline {section}{\numberline {2}Background}{4}{section.2}
+\contentsline {subsection}{\numberline {2.1}Mathematical basics}{4}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Numerical solution}{6}{subsection.2.2}
+\contentsline {subsubsection}{\numberline {2.2.1}Discretization}{6}{subsubsection.2.2.1}
+\contentsline {subsubsection}{\numberline {2.2.2}Solution}{8}{subsubsection.2.2.2}
+\contentsline {subsection}{\numberline {2.3}Consequences for a implementation}{10}{subsection.2.3}
+\contentsline {section}{\numberline {3}Implementation}{11}{section.3}
+\contentsline {subsection}{\numberline {3.1}Software/Solver Design}{11}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}A note on solving linear systems}{13}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Computing the Jacobian}{15}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {3.3.1}AD by hand}{15}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Matrix-free linear solver with \texttt {dco\_c++}}{17}{subsubsection.3.3.2}
+\contentsline {subsection}{\numberline {3.4}Testing}{20}{subsection.3.4}
+\contentsline {section}{\numberline {4}Results}{22}{section.4}
+\contentsline {subsection}{\numberline {4.1}Scherk Surface}{22}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Sine boundaries}{24}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Piece-wise boundary conditions}{24}{subsection.4.3}
+\contentsline {subsection}{\numberline {4.4}Interpretation of convergence results}{25}{subsection.4.4}
+\contentsline {subsection}{\numberline {4.5}Timings}{27}{subsection.4.5}
+\contentsline {section}{\numberline {5}Conclusion and outlook}{28}{section.5}
+\contentsline {section}{\numberline {A}User manual}{30}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Compilation}{30}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Running a simulation}{30}{subsection.A.2}

@@ -638,7 +638,7 @@ For now $\beta_1=0.4, \beta_2=0.8$, we see the result in figure~\ref{fig:scherks
 	\hfill
 	\begin{subfigure}{.49\linewidth}
 		\includegraphics[width=\linewidth]{figs/scherk_beta8}
-		\caption{$\beta_2=0.4$}
+		\caption{$\beta_2=0.8$}
 	\end{subfigure}
 	\caption{Scherk's surface on a truncated domain for different choices of the scaling factor $\beta$}\label{fig:scherks}
 \end{figure}
@@ -757,6 +757,12 @@ The code was timed to check the efficiency of the OpenMP parallelization. It can
 This can be asserted mainly due the fact that every Newton iteration of the matrix-free algorithm calls $\texttt{dco}$ a large number of times (\# iterations for the linear solve), and each \texttt{dco}-call is costly. On the other hand, this has the effect, that less Newton iterations are needed in general, since every Newton iteration effectively uses a new linearization of the Jacobian for each iteration of the linear solver.
 
 As an example set, for N=500, tolerance for the residual inside the Newton iterations 10$^{-6}$ and linear solver tolerance as 10$^{-7}$ , we get the time for the execution of the code as 279.220 [s] on average, while we use Newton's tolerance as 10$^{-3}$ and linear solver tolerance as 10$^{-7}$, the execution time is 155.364 [s]. This is approximately half of the time compared to the previous case. For both these cases, we get the same error measured in both $\ell_2$-norm and $\max$-norm.
+
+In figure~\ref{fig: Timing}, we use the following definitions or speedup $S_p$ and efficiency $E_p$, where $n_p$ is the number of threads in use, $T_1$ is the serial execution of the same code, and $T_p$ is the execution using $n_p$ threads.
+\begin{align}
+	S &:= \frac{T_p}{T_1} \\
+	E_p &:= \frac{S_p}{n_p}
+\end{align}
 
 \newpage
 % #########################################################################
