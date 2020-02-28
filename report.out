@@ -14,8 +14,11 @@
 \BOOKMARK [2][-]{subsection.3.4}{Testing}{section.3}% 14
 \BOOKMARK [1][-]{section.4}{Results}{}% 15
 \BOOKMARK [2][-]{subsection.4.1}{Scherk Surface}{section.4}% 16
-\BOOKMARK [2][-]{subsection.4.2}{Timings}{section.4}% 17
-\BOOKMARK [1][-]{section.5}{Conclusions and outlook}{}% 18
-\BOOKMARK [1][-]{appendix.A}{User manual}{}% 19
-\BOOKMARK [2][-]{subsection.A.1}{Compilation}{appendix.A}% 20
-\BOOKMARK [2][-]{subsection.A.2}{Running a simulation}{appendix.A}% 21
+\BOOKMARK [2][-]{subsection.4.2}{Sine boundaries}{section.4}% 17
+\BOOKMARK [2][-]{subsection.4.3}{Piece-wise boundary conditions}{section.4}% 18
+\BOOKMARK [2][-]{subsection.4.4}{Interpretation of convergence results}{section.4}% 19
+\BOOKMARK [2][-]{subsection.4.5}{Timings}{section.4}% 20
+\BOOKMARK [1][-]{section.5}{Conclusion and outlook}{}% 21
+\BOOKMARK [1][-]{appendix.A}{User manual}{}% 22
+\BOOKMARK [2][-]{subsection.A.1}{Compilation}{appendix.A}% 23
+\BOOKMARK [2][-]{subsection.A.2}{Running a simulation}{appendix.A}% 24

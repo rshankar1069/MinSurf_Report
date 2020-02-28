@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2020.1.1)  28 FEB 2020 16:42
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2020.1.1)  28 FEB 2020 22:31
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1364,7 +1364,7 @@ LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <14.4> not available
  [2
 
 ]
-<./figs/minsurfIntro.png, id=127, 135.50626pt x 82.3075pt>
+<./figs/minsurfIntro.png, id=142, 135.50626pt x 82.3075pt>
 File: ./figs/minsurfIntro.png Graphic file (type png)
 
 <use ./figs/minsurfIntro.png>
@@ -1383,14 +1383,14 @@ File: omsppl.fd
 LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 128.
 
-<./figs/BioGyroid.jpg, id=129, 1053.9375pt x 767.86874pt>
+<./figs/BioGyroid.jpg, id=144, 1053.9375pt x 767.86874pt>
 File: ./figs/BioGyroid.jpg Graphic file (type jpg)
 
 <use ./figs/BioGyroid.jpg>
 Package pdftex.def Info: ./figs/BioGyroid.jpg used on input line 146.
 (pdftex.def)             Requested size: 167.29967pt x 121.88902pt.
 
-<./figs/Architecture.jpg, id=132, 1606.0pt x 1058.95625pt>
+<./figs/Architecture.jpg, id=147, 1606.0pt x 1058.95625pt>
 File: ./figs/Architecture.jpg Graphic file (type jpg)
 
 <use ./figs/Architecture.jpg>
@@ -1419,7 +1419,7 @@ Package epstopdf Info: Output file is already uptodate.
 
 pdfTeX warning: /usr/bin/pdflatex (file ./figs/scherk-test-eps-converted-to.pdf
 ): PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<figs/scherk-test-eps-converted-to.pdf, id=154, 421.575pt x 316.18124pt>
+<figs/scherk-test-eps-converted-to.pdf, id=169, 421.575pt x 316.18124pt>
 File: figs/scherk-test-eps-converted-to.pdf Graphic file (type pdf)
 
 <use figs/scherk-test-eps-converted-to.pdf>
@@ -1432,7 +1432,7 @@ Overfull \hbox (7.72504pt too wide) in paragraph at lines 276--276
 [] 
  []
 
-<figs/FDMMesh.pdf, id=194, 110.12242pt x 108.31969pt>
+<figs/FDMMesh.pdf, id=211, 110.12242pt x 108.31969pt>
 File: figs/FDMMesh.pdf Graphic file (type pdf)
  <use figs/FDMMesh.pdf>
 Package pdftex.def Info: figs/FDMMesh.pdf used on input line 290.
@@ -1455,7 +1455,7 @@ LaTeX Font Info:    Font shape `U/msb/m/n' will be
  [10
 
 ]
-<./figs/ReportUML.pdf, id=247, 845.07718pt x 598.15468pt>
+<./figs/ReportUML.pdf, id=264, 845.07718pt x 598.15468pt>
 File: ./figs/ReportUML.pdf Graphic file (type pdf)
 
 <use ./figs/ReportUML.pdf>
@@ -1518,20 +1518,135 @@ LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10.95> not available
 
 pdfTeX warning: /usr/bin/pdflatex (file ./figs/Test.pdf): PDF inclusion: found 
 PDF version <1.7>, but at most version <1.5> allowed
-<figs/Test.pdf, id=425, 963.6pt x 542.025pt>
+<figs/Test.pdf, id=443, 963.6pt x 542.025pt>
 File: figs/Test.pdf Graphic file (type pdf)
  <use figs/Test.pdf>
-Package pdftex.def Info: figs/Test.pdf used on input line 604.
-(pdftex.def)             Requested size: 418.25555pt x 235.26619pt.
- [20] [21 <./figs/Test.pdf>]
+Package pdftex.def Info: figs/Test.pdf used on input line 597.
+(pdftex.def)             Requested size: 376.42744pt x 211.73625pt.
+ [20 <./figs/Test.pdf>] [21] <figs/scherk_beta4.png, id=464, 1284.8pt x 722.7pt
+>
+File: figs/scherk_beta4.png Graphic file (type png)
 
-pdfTeX warning: /usr/bin/pdflatex (file ./figs/Scherk.pdf): PDF inclusion: foun
-d PDF version <1.7>, but at most version <1.5> allowed
-<figs/Scherk.pdf, id=444, 963.6pt x 542.025pt>
-File: figs/Scherk.pdf Graphic file (type pdf)
- <use figs/Scherk.pdf>
-Package pdftex.def Info: figs/Scherk.pdf used on input line 651.
-(pdftex.def)             Requested size: 209.12778pt x 117.63309pt.
+<use figs/scherk_beta4.png>
+Package pdftex.def Info: figs/scherk_beta4.png used on input line 635.
+(pdftex.def)             Requested size: 204.94751pt x 115.28148pt.
+
+<figs/scherk_beta8.png, id=465, 1284.8pt x 722.7pt>
+File: figs/scherk_beta8.png Graphic file (type png)
+
+<use figs/scherk_beta8.png>
+Package pdftex.def Info: figs/scherk_beta8.png used on input line 640.
+(pdftex.def)             Requested size: 204.94751pt x 115.28148pt.
+ [22 <./figs/scherk_beta4.png> <./figs/scherk_beta8.png>]
+Package epstopdf Info: Source file: <figs/errorbeta4.eps>
+(epstopdf)                    date: 2020-02-28 22:09:45
+(epstopdf)                    size: 69100 bytes
+(epstopdf)             Output file: <figs/errorbeta4-eps-converted-to.pdf>
+(epstopdf)                    date: 2020-02-28 22:17:15
+(epstopdf)                    size: 34321 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/errorbeta4-eps-conver
+ted-to.pdf figs/errorbeta4.eps>
+(epstopdf)             \includegraphics on input line 662.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: /usr/bin/pdflatex (file ./figs/errorbeta4-eps-converted-to.pdf)
+: PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/errorbeta4-eps-converted-to.pdf, id=481, 454.69875pt x 255.95625pt>
+File: figs/errorbeta4-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/errorbeta4-eps-converted-to.pdf>
+Package pdftex.def Info: figs/errorbeta4-eps-converted-to.pdf used on input lin
+e 662.
+(pdftex.def)             Requested size: 250.95587pt x 141.26846pt.
+Package epstopdf Info: Source file: <figs/errorbeta8.eps>
+(epstopdf)                    date: 2020-02-28 22:14:14
+(epstopdf)                    size: 90955 bytes
+(epstopdf)             Output file: <figs/errorbeta8-eps-converted-to.pdf>
+(epstopdf)                    date: 2020-02-28 22:17:15
+(epstopdf)                    size: 43964 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/errorbeta8-eps-conver
+ted-to.pdf figs/errorbeta8.eps>
+(epstopdf)             \includegraphics on input line 666.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: /usr/bin/pdflatex (file ./figs/errorbeta8-eps-converted-to.pdf)
+: PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/errorbeta8-eps-converted-to.pdf, id=482, 454.69875pt x 255.95625pt>
+File: figs/errorbeta8-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/errorbeta8-eps-converted-to.pdf>
+Package pdftex.def Info: figs/errorbeta8-eps-converted-to.pdf used on input lin
+e 666.
+(pdftex.def)             Requested size: 250.95587pt x 141.26846pt.
+ [23 <./figs/errorbeta4-eps-converted-to.pdf> <./figs/errorbeta8-eps-converted-
+to.pdf>]
+<figs/sine.png, id=493, 1284.8pt x 722.7pt>
+File: figs/sine.png Graphic file (type png)
+ <use figs/sine.png>
+Package pdftex.def Info: figs/sine.png used on input line 681.
+(pdftex.def)             Requested size: 204.94751pt x 115.28148pt.
+
+<figs/piecewise.png, id=494, 1284.8pt x 722.7pt>
+File: figs/piecewise.png Graphic file (type png)
+ <use figs/piecewise.png>
+Package pdftex.def Info: figs/piecewise.png used on input line 687.
+(pdftex.def)             Requested size: 204.94751pt x 115.28148pt.
+
+Underfull \hbox (badness 10000) in paragraph at lines 688--688
+[][][]|\OT1/ppl/m/n/10 Piece-wise bound-ary con-di-tions in-tro-
+ []
+
+[24 <./figs/sine.png> <./figs/piecewise.png>]
+Package epstopdf Info: Source file: <figs/ADbyHand.eps>
+(epstopdf)                    date: 2020-02-28 20:05:52
+(epstopdf)                    size: 92418 bytes
+(epstopdf)             Output file: <figs/ADbyHand-eps-converted-to.pdf>
+(epstopdf)                    date: 2020-02-28 21:29:00
+(epstopdf)                    size: 45217 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/ADbyHand-eps-converte
+d-to.pdf figs/ADbyHand.eps>
+(epstopdf)             \includegraphics on input line 727.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: /usr/bin/pdflatex (file ./figs/ADbyHand-eps-converted-to.pdf): 
+PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/ADbyHand-eps-converted-to.pdf, id=509, 577.15625pt x 393.47pt>
+File: figs/ADbyHand-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/ADbyHand-eps-converted-to.pdf>
+Package pdftex.def Info: figs/ADbyHand-eps-converted-to.pdf used on input line 
+727.
+(pdftex.def)             Requested size: 418.25555pt x 285.15337pt.
+Package epstopdf Info: Source file: <figs/Matrixfree.eps>
+(epstopdf)                    date: 2020-02-28 20:05:34
+(epstopdf)                    size: 90566 bytes
+(epstopdf)             Output file: <figs/Matrixfree-eps-converted-to.pdf>
+(epstopdf)                    date: 2020-02-28 21:29:00
+(epstopdf)                    size: 44781 bytes
+(epstopdf)             Command: <repstopdf --outfile=figs/Matrixfree-eps-conver
+ted-to.pdf figs/Matrixfree.eps>
+(epstopdf)             \includegraphics on input line 733.
+Package epstopdf Info: Output file is already uptodate.
+
+
+pdfTeX warning: /usr/bin/pdflatex (file ./figs/Matrixfree-eps-converted-to.pdf)
+: PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
+<figs/Matrixfree-eps-converted-to.pdf, id=510, 576.1525pt x 391.4625pt>
+File: figs/Matrixfree-eps-converted-to.pdf Graphic file (type pdf)
+
+<use figs/Matrixfree-eps-converted-to.pdf>
+Package pdftex.def Info: figs/Matrixfree-eps-converted-to.pdf used on input lin
+e 733.
+(pdftex.def)             Requested size: 418.25555pt x 284.18831pt.
+
+
+LaTeX Warning: Float too large for page by 61.34142pt on input line 737.
+
+[25] [26 <./figs/ADbyHand-eps-converted-to.pdf> <./figs/Matrixfree-eps-converte
+d-to.pdf>]
 Package epstopdf Info: Source file: <./figs/efficiency.eps>
 (epstopdf)                    date: 2020-02-28 12:45:16
 (epstopdf)                    size: 99283 bytes
@@ -1540,18 +1655,18 @@ Package epstopdf Info: Source file: <./figs/efficiency.eps>
 (epstopdf)                    size: 42610 bytes
 (epstopdf)             Command: <repstopdf --outfile=./figs/efficiency-eps-conv
 erted-to.pdf ./figs/efficiency.eps>
-(epstopdf)             \includegraphics on input line 660.
+(epstopdf)             \includegraphics on input line 748.
 Package epstopdf Info: Output file is already uptodate.
 
 
 pdfTeX warning: /usr/bin/pdflatex (file ./figs/efficiency-eps-converted-to.pdf)
 : PDF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<./figs/efficiency-eps-converted-to.pdf, id=445, 421.575pt x 316.18124pt>
+<./figs/efficiency-eps-converted-to.pdf, id=525, 421.575pt x 316.18124pt>
 File: ./figs/efficiency-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ./figs/efficiency-eps-converted-to.pdf>
 Package pdftex.def Info: ./figs/efficiency-eps-converted-to.pdf used on input l
-ine 660.
+ine 748.
 (pdftex.def)             Requested size: 200.76086pt x 150.57361pt.
 Package epstopdf Info: Source file: <./figs/speedup.eps>
 (epstopdf)                    date: 2020-02-28 12:45:16
@@ -1561,53 +1676,65 @@ Package epstopdf Info: Source file: <./figs/speedup.eps>
 (epstopdf)                    size: 41491 bytes
 (epstopdf)             Command: <repstopdf --outfile=./figs/speedup-eps-convert
 ed-to.pdf ./figs/speedup.eps>
-(epstopdf)             \includegraphics on input line 663.
+(epstopdf)             \includegraphics on input line 751.
 Package epstopdf Info: Output file is already uptodate.
 
 
 pdfTeX warning: /usr/bin/pdflatex (file ./figs/speedup-eps-converted-to.pdf): P
 DF inclusion: found PDF version <1.7>, but at most version <1.5> allowed
-<./figs/speedup-eps-converted-to.pdf, id=446, 421.575pt x 316.18124pt>
+<./figs/speedup-eps-converted-to.pdf, id=526, 421.575pt x 316.18124pt>
 File: ./figs/speedup-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ./figs/speedup-eps-converted-to.pdf>
 Package pdftex.def Info: ./figs/speedup-eps-converted-to.pdf used on input line
- 663.
+ 751.
 (pdftex.def)             Requested size: 200.76086pt x 150.57361pt.
- [22 <./figs/Scherk.pdf>] [23 <./figs/efficiency-eps-converted-to.pdf> <./figs/
-speedup-eps-converted-to.pdf>]
-(./report.bbl) [24]
+ [27
+
+ <./figs/efficiency-eps-converted-to.pdf> <./figs/speedup-eps-converted-to.pdf>
+] (./report.bbl [28]) [29]
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
 (/usr/share/texlive/texmf-dist/tex/latex/listings/lstlang1.sty
 File: lstlang1.sty 2015/06/04 1.6 listings language file
 )
+LaTeX Font Info:    Font shape `OT1/phv/bx/n' in size <10> not available
+(Font)              Font shape `OT1/phv/b/n' tried instead on input line 803.
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <10> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 708.
- [25
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 807.
+ [30
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 729.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 729.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 828.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 828.
 
 (./report.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 729.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 729.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 828.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 828.
 Package rerunfilecheck Info: File `report.out' has not changed.
-(rerunfilecheck)             Checksum: 15DDB3451EE8312EBFB57A24ED6C481B;1355.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 729.
+(rerunfilecheck)             Checksum: 59372188F0C95158DE16467C7E1C9675;1586.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 828.
  ) 
 Here is how much of TeX's memory you used:
- 40366 strings out of 494893
- 952848 string characters out of 6178673
- 1447606 words of memory out of 5000000
- 42777 multiletter control sequences out of 15000+600000
- 69546 words of font info for 216 fonts, out of 8000000 for 9000
+ 40435 strings out of 494893
+ 954312 string characters out of 6178673
+ 1448970 words of memory out of 5000000
+ 42826 multiletter control sequences out of 15000+600000
+ 73519 words of font info for 221 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
  64i,20n,100p,8817b,1226s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{Hfootnote.11} has been referenced but does not ex
+pdfTeX warning (dest): name{Hfootnote.14} has been referenced but does not ex
 ist, replaced by a fixed one
+
+pdfTeX warning (dest): name{Hfootnote.13} has been referenced but does not exis
+t, replaced by a fixed one
+
+pdfTeX warning (dest): name{Hfootnote.12} has been referenced but does not exis
+t, replaced by a fixed one
+
+pdfTeX warning (dest): name{Hfootnote.11} has been referenced but does not exis
+t, replaced by a fixed one
 
 pdfTeX warning (dest): name{Hfootnote.10} has been referenced but does not exis
 t, replaced by a fixed one
@@ -1655,14 +1782,16 @@ b></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eurm10.pfb><
 /usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eurm7.pfb></usr
 /share/texlive/texmf-dist/fonts/type1/public/amsfonts/euler/eusm10.pfb></usr/sh
 are/texlive/texmf-dist/fonts/type1/public/mathpazo/fplmbb.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dis
-t/fonts/type1/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/type
-1/urw/palatino/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palati
-no/uplri8a.pfb>
-Output written on report.pdf (25 pages, 1285330 bytes).
+ve/texmf-dist/fonts/type1/public/amsfonts/symbols/msam10.pfb></usr/share/texliv
+e/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist
+/fonts/type1/urw/helvetic/uhvr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1
+/urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatin
+o/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplri8a.pf
+b>
+Output written on report.pdf (30 pages, 1792408 bytes).
 PDF statistics:
- 598 PDF objects out of 1000 (max. 8388607)
- 511 compressed objects within 6 object streams
- 159 named destinations out of 1000 (max. 500000)
- 231 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 678 PDF objects out of 1000 (max. 8388607)
+ 573 compressed objects within 6 object streams
+ 172 named destinations out of 1000 (max. 500000)
+ 290 words of extra memory for PDF output out of 10000 (max. 10000000)
 

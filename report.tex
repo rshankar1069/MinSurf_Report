@@ -423,12 +423,12 @@ The convergence of iterative schemes can be (dependent on the system) boosted by
 
 Testing these methods on our initial-guess subroutine, which solves the Laplace-equation, has yielded, that, while SparseLU is faster than BiCGSTAB+Jacobi, the right tuning of ILUT in combination with BiCGSTAB is fastest. 
 
-Still though, our implementation inside the Newton-iteration uses bare BiCGSTAB with Jacobi-preconditioner. The reason therefore is, that we chose to represent the discrete system not as the reduced system (i.e. boundary information is brought onto the right-hand-side, yielding a system size of $(N-2)^2$ instead of $N^2$), but as the full system\footnote{We discussed this with our supervisor in the beginning of the project, and concluded that solving the full system would not have substantial drawbacks and would be more intuitive to implement.}. While this has no impact on the feasibility of a LU-decompisition when solving the Laplace-equation, it prohibits a LU-decompisition on the full system. 
+Still though, our implementation inside the Newton-iteration uses bare BiCGSTAB with Jacobi-preconditioner. The reason therefore is, that we chose to represent the discrete system not as the reduced system (i.e. boundary information is brought onto the right-hand-side, yielding a system size of $(N-2)^2$ instead of $N^2$), but as the full system\footnote{We discussed this with our supervisor in the beginning of the project, and concluded that solving the full system would not have substantial drawbacks and would be more intuitive to implement.}. While this has no impact on the feasibility of a LU-decomposition when solving the Laplace-equation, it prohibits a LU-decomposition on the full system. 
 
 Solving the Laplace-equation can be done in one step -- this means, we prescribe the boundary information by putting the associated values on the right-hand-side, and insert an (almost) empty row\footnote{With empty row, we mean a row, that is only made up by 0-elements.}, that carries a 1 on the place, that is to be multiplied with the boundary value at its respective position. In conclusion, the system matrix, that is to be inverted, has still full rank $\Leftrightarrow$ does not contain an empty row. What changes now for the linear systems inside the Newton iterations? We start with an initial guess $z^{(0)}$, which already must contain the boundary information. The linear systems arise, when we want to get from $z^{(i)}$ to $z^{(i+1)}$ -- the difference $dz^{(i)}$ resulting from the linear solve must not change the boundary information, since both  $z^{(i)}$ and $z^{(i+1)}$ inherit already the correct values from $z^{(0)}$. As a consequence the Jacobian of the MSO $\nabla\mSurfDisc{z^{(i)}}$ has an empty row, whenever the row index corresponds to a boundary node. This would prevent us from using SparseLU or an iterative scheme with the ILUT preconditioner. BiCGSTAB+Identity still works, since it only relies on matrix-vector products and scalar products, and multiplying empty rows is not forbidden (but unnecessary work)\footnote{Jacobi preconditioner also can be used, since it only acts if the diagonal entry is non-zero}.
 
 We can overcome this by putting some little extra effort, and setting a 1-entry on the diagonal of the Jacobian of the discrete MSO, if the row corresponds ot a boundary index. This does not change the result, since we are exact on the boundary for all iterations, thus the right-hand-side in this case is 0. By such a procedure, we end up with a non-singular Jacobian, and can use direct methods and preconditioners. As before, numerical tests suggest that for the right tuning, BiCGSTAB+ILUT is the fastest option for our problem, while SparseLU would be still faster that BiCGSTAB+Jacobi. 
-Next, note, that the Newton procedure does not require the 'exact' value of $dz^{(i)}$, but can be satisfied with a solution up to a certain tolerance \footnote{keyword in \texttt{params.in}: $\textsc{tol}_\text{linsolver}$}, on one hand enables us to choose this tolerance of the same order\footnote{in some cases even slightly larger -- this requires possibly more iterations, while each linear solve is less and less costly}. This allows us to additionally boost the runtime of the iterations by choosing a smart value for this linear solve tolerance. 
+Next, note, that the Newton procedure does not require the 'exact' value of $dz^{(i)}$, but can be satisfied with a solution up to a certain tolerance\footnote{keyword in \texttt{params.in}: $\textsc{tol}_\text{linsolver}$}, on one hand enables us to choose this tolerance of the same order\footnote{in some cases even slightly larger -- this requires possibly more iterations, while each linear solve is less and less costly}. This allows us to additionally boost the runtime of the iterations by choosing a smart value for this linear solve tolerance. 
 
 Therefore, we choose this to be the default in our solver. We are not providing a switch option to change the solver, because the software is only capable of solving this very PDE, which means we do not have to expect a substantially different structure of the Jacobian\footnote{Depending on boundary conditions, it has different entries, but the non-zero pattern stays the same in general.}. Apart from that, as stated before, the iterative scheme does not rely on exact updates, which can only be exploited using iterative schemes. Therefore, a single, but optimal, solver option shall be sufficient. 
 
@@ -592,18 +592,17 @@ There are also drawbacks of the matrix-free linear solver. One is already noted,
 For testing the validity, we used Google Tests as our testing framework. The unit testing library supports multi-platforms and compilers and allows for source testing, without large source modification. Since the code was very modular, structured and independently developed in parts, unit testing was fairly simple as well. Associated data types storing computational values and classes and their respective methods were checked for validity. 
 Depending on the type of debugging, the library offers four broad ways of testing as represented in the figure above.
 
+\begin{figure}
+	\centering
+	\includegraphics[width=.9\textwidth]{figs/Test.pdf}
+	\caption{Testing functionalities offered by Google Tests}\label{fig:Google Test}
+\end{figure}
 \begin{itemize}
   \item Negation Test: In case a test fails under non-assertive statements, test function returns the expected value as compared to the manual value which makes unit debugging much simpler and faster.
   \item Succeed Test: Used for testing blocks or modules of code for successful compilation error. Very helpful for module wise checks while debugging.
  \item Expectational Test: States if the expected and returned value of the test matches and gives a green flag in case of success.
  \item Assert Test (Fatal Testing): Used to assert program specific mandatory conditions for a successful build and execution of code. Stops the compilation in case of failure.
 \end{itemize}
-
-\begin{figure}
-	\centering
-	\includegraphics[width=1\textwidth]{figs/Test.pdf}
-	\caption{Testing Outputs}\label{fig:Google Test}
-\end{figure}
 
 The test part of the program gets called recursively by CMake. It creates an executable and the same can then be accessed like the main program, albeit just tests with appropriate input from the \texttt{params.in} file. All the necessary dependent header files  had to be manually added for accessing the classes and their methods.
 For testing purposes, the code was sectioned in three broad parts as per modularity namely, \texttt{inputParser}, \texttt{cartesianGrid} and \texttt{solver}.  
@@ -614,34 +613,134 @@ For testing purposes, the code was sectioned in three broad parts as per modular
  \item Analytical Scherk : To test the validity of the solver, analytical solution with constrained boundary arguments are generated and error produced with respect to the solver solution. The computed error is tested for a small tolerance in maximum norm.
 \end{itemize}
 
-Remark: For testing the validity of solver against the Scherk test, the same could not be implemented in Google Tests. The issue could be narrowed down to a linker error which involves usage of the dco library as one of its dependencies and results in either 'core dump' bad memory access error failure by cmake to add tests recursively (stce error). Independent testing would demand a lot of code refactoring and hence could be put up as a scope for improvement. Hence, the same test was replicated in the post processor file and tested for a nominal tolerance.
+Remark: Testing the validity of solver against the Scherk test could not be implemented in Google Tests. The issue could be narrowed down to a linker error which involves usage of the \texttt{dco} library as one of its dependencies and results in either 'core dump' bad memory access error failure by cmake to add tests recursively (stce error). Independent testing would demand a lot of code refactoring and hence could be put up as a scope for improvement. Hence, the same test was replicated in the \texttt{postprocessor} file and tested for a nominal tolerance, chosen to be $\beta^2$. This choice is motivated by the fact, that for smaller $\beta$, the solution is better behaved and the resulting error shall be smaller. As an upper bound, we want the error never to be larger than $1$.  
 
 % #########################################################################
 \section{Results}
-In the following, we will show screenshots of three different test-cases, that come together with the software.
+In the following, we will show screenshots of three different test-cases.
 
 
-\subsection{Scherk Surface}
+\subsection{Scherk Surface}\label{sec:scherkolm}
 Recall the formulation introduced in section~\ref{sec:mathbasics}
 \begin{equation}
 \Sigma_{\text{trunc}} = \left\{ \left. \left(x, y, \log \left( \frac{\cos (\pi\beta_x(x-\frac{1}{2}))}{\cos (\pi\beta_y(y-\frac{1}{2}))} \right) \right) \in \mathbb{R}^{3} \right  | 0 < x, y < 1 \right\}.
 \end{equation} 
-where we introduced a scaling factor $\beta$\footnote{keyword/constant in \texttt{params.in}: \$SCALE}, which scales the boundaries and effectuates solving the MSE on a truncated domain. 
+where we introduced a scaling factor $\beta$\footnote{keyword/constant in \texttt{params.in}: \$SCALE}, which scales the boundaries and effectuates solving the MSE on a truncated domain. We can use the above expression then to compute the error of the numerical approximation with respect to a analytical solution and thereby validate the correctness of our code. 
 
-For now, let $\beta=0.5$, noting that out method converges for $\beta \lessapprox 0.9$, depending on $N$, and shows $\mathcal{O}(N)$ convergence behaviour in both the $\ell_2$ and $\max$-norm if $\beta \lessapprox 0.5$ (cf. figure...) .
-Then, we get the following   
+For now $\beta_1=0.4, \beta_2=0.8$, we see the result in figure~\ref{fig:scherks}.
 
-\subsubsection{Sine boundaries}
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}{.49\linewidth}
+		\includegraphics[width=\linewidth]{figs/scherk_beta4}
+		\caption{$\beta_1=0.4$}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.49\linewidth}
+		\includegraphics[width=\linewidth]{figs/scherk_beta8}
+		\caption{$\beta_2=0.4$}
+	\end{subfigure}
+	\caption{Scherk's surface on a truncated domain for different choices of the scaling factor $\beta$}\label{fig:scherks}
+\end{figure}
 
-\subsubsection{Piece-wise boundary conditions}
+Note, that our method converges for $\beta \lessapprox 0.85$, depending on $N$ and the Jacobian.
+As we can see in figure~\ref{fig:scherks}, the surfaces corresponding to larger values of $\beta$ are less well behaved, thus typically show larger error values with respect to the exact solution. 
+To this end, we look at a brief convergence study for $\beta_1=0.4, \beta_2=0.8$, using the matrix-free Jacobian\footnote{The other Jacobians yield comparable results, and are not depicted here for the sake of a better overview}.
+
+
+Testing with a choice of options for the Jacobian and for $\beta$ gives us the following insights (cf. figure~\ref{fig:conscherks}):
+\begin{itemize}
+	\item The matrix-based algorithms and the matrix-free algorithm do not seem to be totally equivalent for large $\beta$ and/or for large number or gridpoints and small $\beta$. While they both converge to a solution with acceptable error , and the plot of the solution cannot be distinguished by eye for larger $\beta$, the final error for the matrix-based algorithm tends to be a little lower. 
+	\item On the other hand, the matrix based algorithms appear to be less suitable for $\beta\to1$.
+	\item Further, we can observe, that for $\beta\gtrapprox0.85$, the matrix based algorithm does still converge, but the matrix-free method does not (even with a small relaxation parameter).
+\end{itemize}
+
+
+\begin{figure}[h!]
+	\centering
+	\begin{subfigure}{.6\linewidth}
+		\includegraphics[width=\linewidth]{figs/errorbeta4}
+		\caption{$\beta_1=0.4$}
+	\end{subfigure}
+	\begin{subfigure}{.6\linewidth}
+		\includegraphics[width=\linewidth]{figs/errorbeta8}
+		\caption{$\beta_2=0.4$}
+	\end{subfigure}
+	\caption{Scherk's surface on a truncated domain for different choices of the scaling factor $\beta$}\label{fig:conscherks}
+\end{figure}
+
+From figure~\ref{fig:conscherks} we can deduce, that for small enough $\beta$ and thus well enough behaved boundary functions, we get roughly first order of convergence in the error.
+
+\newpage
+\subsection{Sine boundaries}
+The second testcase implemented uses $g|_{\text{bottom}}=g|_{\text{top}}=\sin(\pi(x-0.5))$ and $g|_{\text{left}}=g|_{\text{right}}=\sin(\pi(y-0.5))$.
+By running a simulation with standard parameters (standard \texttt{params.in}-file), we get the surface in figure~\ref{fig:sine}.
+\begin{figure}
+	\begin{subfigure}{.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/sine}
+		\caption{Sine-testcase}\label{fig:sine}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{.49\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/piecewise}
+		\caption{Piece-wise boundary conditions introduced in section~\ref{sec:pcs}. The boundary \texttt{bottom} is here on the left side, \texttt{top} being on the right.}\label{fig:pcs}
+	\end{subfigure}
+	\caption{Visualization of surfaces obtained by a specific choice piece-wise boundary conditions}
+\end{figure}
 
 
 
+\subsection{Piece-wise boundary conditions}\label{sec:pcs}
+Furthermore, our \texttt{inputParser} using a modified ATMSP-library is able to parse piece-wise defined boundary conditions.
+To contrive this, we implemented a kind of indicator functions, defined as $\textsf{smaller1}(x): \mathbb{R} \to \{0,1\}, \textsf{larger1}(x): \mathbb{R} \to \{0,1\}$
+\begin{equation}
+	\textsf{smaller1}(x) = \begin{cases}
+	1&, \text{ if } x \le 1 \\ 0&, \text{ else } 
+	\end{cases}, \quad 	\textsf{larger1}(x) = \begin{cases}
+	1&, \text{ if } x \ge 1 \\ 0&, \text{ else } 
+	\end{cases} 
+\end{equation}
+Using these two functions, while scaling $x$ on the interval one wishes to constrain on, it is able to parse piece-wise defined functions. 
+
+As an example, we chose the following: On the left and right boundary, $g|_{\text{left}}= g|_{\text{right}}=0$, while on the upper (top) boundary, we choose a two lines, meeting continuously in the middle above 0, on the lower (bottom) boundary, they are mirrored along the $x,y$ plane, and meet below 0 (this is not smooth, but will also yield a valid surface).
+
+The result can be found in figure~\ref{fig:pcs}.
 
 
+\newpage
+\subsection{Interpretation of convergence results}
+At last, we investigate the convergence behaviour of the different Jacobians implemented. Since adjoint AD by hand and symbolic differentiation basically correspond to each other, we only depict the former here. 
+
+It can be easily seen, that the matrix-free algorithm needs much less Newton iterations to converge. The reason therefore lies in the fact, that we cannot directly compare one matrix-free Newton iteration with one iteration of the algorithms assembling a matrix. The latter linearize the MSE once per Newton iteration, and then solve for the update step. The former basically builds a new linearization within each step of the underlying linear systems algorithms, since the action of the Jacobian is always considered on the updated solution. This results in less iterations needed, while considering the run-time (section~\ref{sec:tim})
+While the matrix-free method converge approximately in second order, the matrix-assembling methods are approximately first order. Also, one can see, that the matrix-free convergence follows a non-linear curve, in contrast to using a matrix-depending algorithm.
 
 
-\subsection{Timings}
+Apart from that, we observe, that for both methods, the hierarchy of the convergence per testcase ($\leftrightarrow$ boundary condition) is the same. The slowest convergence is obtained by Scherk's surface with a large scaling factor $\beta=0.8$, which is expected from our findings in section~\ref{sec:scherkolm}. The nicest/smoothest boundary is given by Scherk's surface with $\beta=0.4$, resulting in the fastest convergence. Both the sine-boundaries as well as our piece-wise initial condition do have a few non-smooth points (the sine on the edges, the piece-wise on the \texttt{bottom} and \texttt{top}-boundary), and thus have comparable convergence. 
+Given the fact, that the order of convergence is quite similar for all testcases, we can conclude, that the number of iterations depends significantly on the initial residual. Typically, the residual decreases monotonically, though for some testcases, there is a short increase in the beginning. This might be improved by decreasing the relaxation parameter in the input file.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/ADbyHand}
+		\caption{Jacobian by AD by hand (equivalent to symbolic)}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}{\linewidth}
+		\centering
+		\includegraphics[width=\linewidth]{figs/Matrixfree}
+		\caption{Matrix-free Jacobian}
+	\end{subfigure}
+	\caption{Convergence results for the residual $\lVert r_k \rVert _2= \lVert \mSurfDisc{z^h_k}\rVert_2$ depending on different choices of the right-hand-side; all using the solution of the Laplace equation as a initial guess}%; All methods use $\textsc{TOL_\text{linsolver}}=10^{-7}$, which is small enough for the matrix-free algorithm to converge properly.}
+\end{figure}
+
+Furthermore, tests revealed, that the Laplace initial guess greatly improved convergence with respect to the other two options (since it decreases the initial residual by pre-shaping the curvature), and in some cases, is required to converge at all. We do not present the results here.
+
+
+\clearpage
+\subsection{Timings}\label{sec:tim}
 
 \begin{figure}[H]
 	\centering
@@ -654,20 +753,29 @@ Then, we get the following
 	\caption{Parallel Efficiency and Speedup plots for different Jacobian methods}\label{fig: Timing}
 \end{figure}
 
-The code was timed for effectiveness of parallelization. It can be seen that for N = 1000, both Symbolic and AD by Hand take up as much time as Matrix-free method for N = 500. Although the Matrix-free method takes more time per iteration it requires fewer iterations to converge as when compared to the other two methods.
-This can be asserted mainly due the fact that every dco iteration has multiple Newton iterations which essentially makes the process much slower. Also, there is no due criteria to check for symmetricity.
+The code was timed to check the efficiency of the OpenMP parallelization. It can be seen, that for N = 1000, both Symbolic and AD by Hand take up as much time as the Matrix-free method for N = 500. Although the Matrix-free method takes more time per iteration, it requires fewer iterations to converge as when compared to the other two methods.
+This can be asserted mainly due the fact that every Newton iteration of the matrix-free algorithm calls $\texttt{dco}$ a large number of times (\# iterations for the linear solve), and each \texttt{dco}-call is costly. On the other hand, this has the effect, that less Newton iterations are needed in general, since every Newton iteration effectively uses a new linearization of the Jacobian for each iteration of the linear solver.
 
+As an example set, for N=500, tolerance for the residual inside the Newton iterations 10$^{-6}$ and linear solver tolerance as 10$^{-7}$ , we get the time for the execution of the code as 279.220 [s] on average, while we use Newton's tolerance as 10$^{-3}$ and linear solver tolerance as 10$^{-7}$, the execution time is 155.364 [s]. This is approximately half of the time compared to the previous case. For both these cases, we get the same error measured in both $\ell_2$-norm and $\max$-norm.
 
-As an example set, for N=500 , Newton's tolerance as 10$^{-6}$ and linear solver tolerance as 10$^{-7}$ , we get the time for the execution of the code as 279.220 [s] on average and when we use Newton's tolerance as 10$^{-3}$ and linear solver tolerance as 10$^{-7}$, we get the execution time as 155.364 [s] which is half the time compared to the previous case. For both these cases, we get the same apriori error measured in both l2-norm and max norm.
-
-
+\newpage
 % #########################################################################
-\section{Conclusions and outlook}
+\section{Conclusion and outlook}
+This last section should summarize the conclusions that we were able to draw from working on this project, and provides a short outlook on what could be still done to improve the software.
+
+The main take-away messages, we were able to draw from the project, are:
 \begin{itemize}
-	\item {Code could be modified to better suit for testing purposes. Some test methods were not ethically called due to private dependencies. Appropriate return functions would make it easier and simpler}
+	\item We were given the chance, to build a numerical software from scratch. This essentially forced us, to mobilize knowledge from most of the (mandatory) courses so far the Simulation Sciences curriculum. This way we saw, that we are already able to apply the theory from our studies (in some extent) to a toy problem (that could easily be extended to a practical one).
+	\item The complexity of the project, though moderate, but fitted in a quite narrow time-frame required a good project management amongst the group, in case one wanted to implement everything, that was required. We learnt to appreciate platforms for digital collaboration, such as \texttt{git}, to realize working in a team on a software project.
+\end{itemize}
+
+Although our code fulfils the minimum requirements, there are a few points, that could be improved, and give rise to an outlook, what could be done in a second iteration:
+\begin{itemize}
+	\item {The code could be modified to better suit for testing purposes. Some test methods were not ethically called due to private dependencies. Appropriate return functions would make it easier and simpler.}
 	\item {Private methods could be tested by yet another way: inclusion of \texttt{Gtest\_prod.h} . Unfortunately, not supported by standard CMake.}
 	\item {Extension of the minimal surface problem to include time varying boundary conditions to account for evolution of solution w.r.t. time}
-	\item {Learnt about digital collaboration per se. Developing a project from the scratch. Had all the different applications from Simulation Sciences.}
+	\item{Properly investigate the convergence behaviour of the method, and connect it to the smoothness of the boundary.}
+	\item{Development of a more flexible grid, that allows (i) piece-wise boundary condition, that rely not on a parser, but on flexibly choosable boundary sections. I might furthermore be extended to arbitrary geometries, which requires a proper meshing algorithm, and different shapes of the elements. This would be simplified substantially then if one would use Finite Elements for the discretization.}
 \end{itemize}
 
 % #########################################################################
@@ -678,15 +786,17 @@ As an example set, for N=500 , Newton's tolerance as 10$^{-6}$ and linear solver
 \clearpage
 \appendix
 \section{User manual}
-This section provides a short description on how to run the code. The software accompanying this report is self-contained and guaranteed to run on the RWTH cluster, \sout{using either the current versions of the Intel (19) or GCC (9) compiler}.
+\small
+This section provides a short description on how to run the code. The software accompanying this report is self-contained and made to run on the RWTH cluster.\footnote{using either the current versions of the Intel (19) or GCC (9) compiler.}
 
 \color{@darkred}
-\emph{Update as of last week of February:} Due to a update on the cluster, a few options need to be loaded for the code to compile.
+\emph{Update as of last week of February:} During the last week of February, the following options became necessary for the code to compile. As of February 28, it works again without, but if not, load the following options:
+
 \lstset{backgroundcolor=\color{gray!20}, language=bash, basicstyle=\ttfamily \small, }
 \begin{lstlisting}
 module switch intel gcc 
 module load LIBRARIES
-module load intelmkl
+module load intelmkl    
 \end{lstlisting}
 \normalcolor
 
@@ -714,5 +824,5 @@ Inside this \texttt{params.in}-file, one can find the options to set with descri
 \end{lstlisting}
 Now, the resulting output can be inspected by opening the \texttt{.vts}-files inside \texttt{surfaces/} using Paraview\footnote{to use this on the cluster, execute \texttt{module load GRAPHICS paraview} beforehand.}. If one is interesting in the convergence, one can find the residual data over iteration inside \texttt{residual/}, which can be also plotted using Paraview. 
 
-
+\normalsize
 \end{document}          

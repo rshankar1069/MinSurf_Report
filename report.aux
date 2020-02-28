@@ -40,7 +40,9 @@
 \newlabel{sub@fig:222}{{b}{4}{\scriptsize The West German pavilion, designed by Frei Otto.\cite {noauthor_frei_nodate}\relax }{figure.caption.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Background}{4}{section.2}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Mathematical basics}{4}{subsection.2.1}}
+\newlabel{sec:mathbasics}{{2.1}{4}{Mathematical basics}{subsection.2.1}{}}
 \newlabel{eq:MSE}{{1}{4}{Mathematical basics}{equation.2.1}{}}
+\citation{wiki:scherk}
 \@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Scherk's first surface on $[0,1]^2$\relax }}{5}{figure.caption.4}}
 \newlabel{fig:scherk01}{{3}{5}{Scherk's first surface on $[0,1]^2$\relax }{figure.caption.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Numerical solution}{6}{subsection.2.2}}
@@ -91,28 +93,43 @@
 \newlabel{eq:tg}{{21}{18}{Matrix-free linear solver with \texttt {dco\_c++}}{equation.3.21}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Matrix-free BiCGSTAB to get $\boldsymbol  {dz}$ (adapted from \cite  {naumann})\relax }}{19}{algorithm.4}}
 \newlabel{algo:bicgstab}{{4}{19}{Matrix-free BiCGSTAB to get $\vect {dz}$ (adapted from \cite {naumann})\relax }{algorithm.4}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Testing functionalities offered by Google Tests\relax }}{20}{figure.caption.9}}
+\newlabel{fig:Google Test}{{8}{20}{Testing functionalities offered by Google Tests\relax }{figure.caption.9}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Testing}{20}{subsection.3.4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Testing Outputs\relax }}{21}{figure.caption.9}}
-\newlabel{fig:Google Test}{{8}{21}{Testing Outputs\relax }{figure.caption.9}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Nine Periods of Scherk Surface\relax }}{22}{figure.caption.10}}
-\newlabel{fig:Nine Periods of Scherk Surface}{{9}{22}{Nine Periods of Scherk Surface\relax }{figure.caption.10}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {4}Results}{22}{section.4}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Scherk Surface}{22}{subsection.4.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Timings}{23}{subsection.4.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Parallel Efficiency and Speedup plots for different Jacobian methods\relax }}{23}{figure.caption.11}}
-\newlabel{fig: Timing}{{10}{23}{Parallel Efficiency and Speedup plots for different Jacobian methods\relax }{figure.caption.11}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusions and outlook}{23}{section.5}}
+\newlabel{sec:scherkolm}{{4.1}{22}{Scherk Surface}{subsection.4.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Scherk's surface on a truncated domain for different choices of the scaling factor $\beta $\relax }}{22}{figure.caption.10}}
+\newlabel{fig:scherks}{{9}{22}{Scherk's surface on a truncated domain for different choices of the scaling factor $\beta $\relax }{figure.caption.10}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Scherk's surface on a truncated domain for different choices of the scaling factor $\beta $\relax }}{23}{figure.caption.11}}
+\newlabel{fig:conscherks}{{10}{23}{Scherk's surface on a truncated domain for different choices of the scaling factor $\beta $\relax }{figure.caption.11}{}}
+\newlabel{fig:sine}{{11a}{24}{Sine-testcase\relax }{figure.caption.12}{}}
+\newlabel{sub@fig:sine}{{a}{24}{Sine-testcase\relax }{figure.caption.12}{}}
+\newlabel{fig:pcs}{{11b}{24}{Piece-wise boundary conditions introduced in section~\ref {sec:pcs}. The boundary \texttt {bottom} is here on the left side, \texttt {top} being on the right.\relax }{figure.caption.12}{}}
+\newlabel{sub@fig:pcs}{{b}{24}{Piece-wise boundary conditions introduced in section~\ref {sec:pcs}. The boundary \texttt {bottom} is here on the left side, \texttt {top} being on the right.\relax }{figure.caption.12}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Visualization of surfaces obtained by a specific choice piece-wise boundary conditions\relax }}{24}{figure.caption.12}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Sine boundaries}{24}{subsection.4.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.3}Piece-wise boundary conditions}{24}{subsection.4.3}}
+\newlabel{sec:pcs}{{4.3}{24}{Piece-wise boundary conditions}{subsection.4.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.4}Interpretation of convergence results}{25}{subsection.4.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Convergence results for the residual $\delimiter 69645069 r_k \delimiter 86422285 _2= \delimiter 69645069 \ensuremath  {\mathtt  {F}^h\left [z^h_k\right ]}\delimiter 86422285 _2$ depending on different choices of the right-hand-side; all using the solution of the Laplace equation as a initial guess\relax }}{26}{figure.caption.13}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}Timings}{27}{subsection.4.5}}
+\newlabel{sec:tim}{{4.5}{27}{Timings}{subsection.4.5}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Parallel Efficiency and Speedup plots for different Jacobian methods\relax }}{27}{figure.caption.14}}
+\newlabel{fig: Timing}{{13}{27}{Parallel Efficiency and Speedup plots for different Jacobian methods\relax }{figure.caption.14}{}}
 \bibstyle{apalike}
 \bibdata{bibliography}
 \bibcite{wiki:minsurf}{{1}{}{{}}{{}}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusion and outlook}{28}{section.5}}
 \bibcite{gan_biomimetic_2016}{{2}{}{{}}{{}}}
 \bibcite{noauthor_frei_nodate}{{3}{}{{}}{{}}}
 \bibcite{Sakai1976}{{4}{}{{}}{{}}}
-\bibcite{naumann}{{5}{}{{}}{{}}}
+\bibcite{wiki:scherk}{{5}{}{{}}{{}}}
+\bibcite{naumann}{{6}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\@writefile{toc}{\contentsline {section}{\numberline {A}User manual}{25}{appendix.A}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Compilation}{25}{subsection.A.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Running a simulation}{25}{subsection.A.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}User manual}{30}{appendix.A}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Compilation}{30}{subsection.A.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Running a simulation}{30}{subsection.A.2}}
 \global\csname @altsecnumformattrue\endcsname
 \global\@namedef{scr@dte@section@lastmaxnumwidth}{13.51204pt}
 \global\@namedef{scr@dte@subsection@lastmaxnumwidth}{23.84888pt}
