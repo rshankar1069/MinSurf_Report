@@ -21,7 +21,6 @@
 \usepackage[all]{hypcap}
 \usepackage{subcaption}
 
-
 \usepackage{amsmath}
 \usepackage{amsfonts}
 \usepackage{amssymb}
@@ -63,7 +62,7 @@ minimum height=2em]
 % ---------------------  Title page setup ----------------------------
 % Title Page
 \title{Minimal Surfaces}
-\author{add your matriculation numbers here!\\Chenfei Fan \\  Praveen Mishra \\ Sankarasubramanian Ragunathan\quad 389851\\ Philipp Schleich\quad 391779}
+\author{add your matriculation numbers here!\\Chenfei Fan \\  Praveen Mishra\quad 389850 \\ Sankarasubramanian Ragunathan\quad 389851\\ Philipp Schleich\quad 391779}
 %
 \subject{Report \\ Simulation Sciences Laboratory}
 \date{\today \\ \vspace{0.9cm}}
@@ -541,25 +540,86 @@ There are also drawbacks of the matrix-free linear solver. One is already noted,
 	for the loops, bicgstab is still advantageous as we can greatly reduce TOL\_linsolver.}
 \normalfont
 \subsection{Testing}
-@Praveen
-here the figure as in the presentation, short explanation (basically what you said)
+For testing the validity, we used Google Tests as our testing framework. The unit testing library supports multi-platforms and compilers and allows for source testing, without large source modification. Since the code was very modular, structured and independently developed in parts, unit testing was fairly simple as well. Associated data types storing computational values and Classes and their respective Functions were checked for validity. 
+Depending on type of debugging, the library offers four broad ways of testing as represented in the figure above.
 
-maybe 1-2 results of tests, short explanation
+\begin{itemize}
+  \item Negation Test: In case a test fails under non-assertive statements, test function returns the expected value as compared to the manual value which makes unit debugging much simpler and faster.
+  \item Succeed Test: Used for testing blocks or modules of code for successful compilation error. Vastly helpful for module wise checks while debugging.
+ \item Expectational Test: States if the expected and returned value of the test matches and gives a green flag for success
+ \item Assert Test: Fatal Testing. Used to assert program specific mandatory conditions for successful build and execution of code. Stops the compilation in case of failure.
+\end{itemize}
 
-checking of validity by means of scherk, present a result here
+\begin{figure}
+	\centering
+	\includegraphics[width=1\textwidth]{figs/Test.pdf}
+	\caption{Testing Outputs}\label{fig:Google Test}
+\end{figure}
+
+The test part of the program gets called recursively by CMake. It creates an executable and the same can then be accessed like the main program albeit just tests with appropriate input from parameters file. All the necessary dependent header files were to be manually added for accessing the classes and their methods.
+For testing purposes, the code was sectioned in three broad parts as per modularity namely, Input parser, Cartesian Grid and Solver.  
+\begin{itemize}
+  \item Input Parser: An instance of class Input Parser (InputParserObj) is created in the testing module. Various setter functions set the values after reading the input from params file and the same can then be validated by the expected values returned by getter functions.
+  \item Cartesian Grid: Simple unit tests pertaining to setting up of cartesian grid, sorting algorithm and the respective node lists were tested for lexicographical ordering. The same is done for both the boundary as well as inner nodes.
+ \item Solver: Primitive solver was tested for the independent unit functional arguments. For example the functional dependency of solver for applying boundary conditions (executed by the function applyBC()) were tested for unit arguments. A unit (or null) test vector is passed as an argument after creating an instance of the class 'solver' and calling the function by the same instance. The test vector is then tested for validity like first and last element  values.  
+ \item Analytical Scherk : To test the validity of the solver, analytical solution with constrained boundary arguments are generated and error produced with respect to the solver solution. The computed error is tested for a small tolerance in maximum norm.
+\end{itemize}
+
+Remark : For testing the validity of solver against the Scherk test, the same could not be implemented in Google Tests. The issue could be narrowed down to a linker error which involves usage of the dco library as one of its dependencies and results in either 'core dump' bad memory access error failure by cmake to add tests recursively (stce error). Independent testing would demand a lot of code refactoring and hence could be put up as a scope for improvement. Hence, the same test was replicated in the post processor file and tested for a nominal tolerance. 
 
 % #########################################################################
 \section{Results}
-@Praveen you can refer to Scherk from General background, 
-results for the 2 testcases, some timings (for all solvers for a choice of $\#$gridpoints, not too many), scaling of the three (fix $\#$gridpoints to sth $>500$ for jacOption 0,1 and maybe max. 200-300 for 2, and run for 1,2,4,8,16 threads)
-once timings are implemented, you can also ask us to help determine times (consistent TOL's etc...)
+\subsection{Scherk Surface}
+Scherk surface is a classic example of minimal surface. Scherk gave his two surfaces in 1834, first doubly periodic and second singly. Consider the following domain in the Euclidean plane: 
+ \begin{equation}
+	u= {(-\pi/2,+\pi/2) x (-\pi/2,+\pi/2)} \rightarrow \mathbb{R}^{3}
+\end{equation} 
+such that
+ \begin{equation}
+	 lim \underset{y\rightarrow +\underset{-}\pi/2}  u (x, y)=  { +n  (-\pi/2< x < +\pi/2)}
+\end{equation} 
+ \begin{equation}
+        lim  \underset{x\rightarrow +\underset{-}\pi/2}  u (x, y)=  { -n   (-\pi/2< y< +\pi/2)}
+\end{equation} 
+Thus, u satisfies the minimal surface equation.The limiting surface as n tends to infinity is called the Scherk surface.Hence, the general Scherk surface over the square domain is given by:
+  \begin{equation}
+	\Sigma = \left\{ \left. \left(x, y, \log \left( \frac{\cos (\pi(x))}{\cos (\pi(y))} \right) \right) \in \mathbb{R}^{3} \right  | +\pi/2 < x, y < -\pi/2 \right\}.
+\end{equation} 
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.5\textwidth]{figs/Scherk.pdf}
+	\caption{Nine Periods of Scherk Surface}\label{fig:Nine Periods of Scherk Surface}
+\end{figure}
+
+\subsection{Timings}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.48\linewidth}
+		\includegraphics[width=\linewidth]{./figs/efficiency.eps}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.48\linewidth}
+		\includegraphics[width=\linewidth]{./figs/speedup.eps}
+	\end{subfigure}
+	\caption{Parallel Efficiency and Speedup plots for different Jacobian methods}\label{fig: Timing}
+\end{figure}
+
+The code was timed for effectiveness of parallelization. It can be seen that for N = 1000, both Symbolic and AD by Hand take up as much time as Matrix-free method for N = 500. Although the Matrix-free method takes more time per iteration it requires fewer iterations to converge as when compared to the other two methods.
+This can be asserted mainly due the fact that every dco iteration has multiple Newton iterations which essentially makes the process much slower. Also, there is no due criteria to check for symmetricity.
+
+
+As an example set, for N=500 , Newton's tolerance as 10$^{-6}$ and linear solver tolerance as 10$^{-7}$ , we get the time for the execution of the code as 279.220 [s] on average and when we use Newton's tolerance as 10$^{-3}$ and linear solver tolerance as 10$^{-7}$, we get the execution time as 155.364 [s] which is half the time compared to the previous case. For both these cases, we get the same apriori error measured in both l2-norm and max norm.
 
 
 % #########################################################################
 \section{Conclusions and outlook}
-pretty much what we had in the presentation
-
-@all, feel free to add ideas here, I would merge it together in the end
+\begin{itemize}
+	\item {Code could be modified to better suit for testing purposes. Some test methods were not ethically called due to private dependencies. Appropriate return functions would make it easier and simpler}
+	\item {Private methods could be tested by yet another way: inclusion of \texttt{Gtest\_prod.h} . Unfortunately, not supported by standard CMake.}
+	\item {Extension of the minimal surface problem to include time varying boundary conditions to account for evolution of solution w.r.t. time}
+	\item {Learnt about digital collaboration per se. Developing a project from the scratch. Had all the different applications from Simulation Sciences.}
+\end{itemize}
 
 % #########################################################################
 
