@@ -11,8 +11,10 @@
 \contentsline {subsection}{\numberline {3.2}Computing the Jacobian}{12}{subsection.3.2}
 \contentsline {subsection}{\numberline {3.3}Solving linear systems}{13}{subsection.3.3}
 \contentsline {subsection}{\numberline {3.4}Testing}{14}{subsection.3.4}
-\contentsline {section}{\numberline {4}Results}{14}{section.4}
-\contentsline {section}{\numberline {5}Conclusions and outlook}{14}{section.5}
-\contentsline {section}{\numberline {A}User manual}{15}{appendix.A}
-\contentsline {subsection}{\numberline {A.1}Compilation}{15}{subsection.A.1}
-\contentsline {subsection}{\numberline {A.2}Running a simulation}{15}{subsection.A.2}
+\contentsline {section}{\numberline {4}Results}{16}{section.4}
+\contentsline {subsection}{\numberline {4.1}Scherk Surface}{16}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Timings}{17}{subsection.4.2}
+\contentsline {section}{\numberline {5}Conclusions and outlook}{17}{section.5}
+\contentsline {section}{\numberline {A}User manual}{19}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Compilation}{19}{subsection.A.1}
+\contentsline {subsection}{\numberline {A.2}Running a simulation}{19}{subsection.A.2}
