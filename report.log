@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2020.1.1)  28 FEB 2020 22:31
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016/Debian) (preloaded format=pdflatex 2020.1.1)  28 FEB 2020 22:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1560,11 +1560,11 @@ Package pdftex.def Info: figs/errorbeta4-eps-converted-to.pdf used on input lin
 e 662.
 (pdftex.def)             Requested size: 250.95587pt x 141.26846pt.
 Package epstopdf Info: Source file: <figs/errorbeta8.eps>
-(epstopdf)                    date: 2020-02-28 22:14:14
-(epstopdf)                    size: 90955 bytes
+(epstopdf)                    date: 2020-02-28 22:36:15
+(epstopdf)                    size: 65961 bytes
 (epstopdf)             Output file: <figs/errorbeta8-eps-converted-to.pdf>
-(epstopdf)                    date: 2020-02-28 22:17:15
-(epstopdf)                    size: 43964 bytes
+(epstopdf)                    date: 2020-02-28 22:36:44
+(epstopdf)                    size: 32750 bytes
 (epstopdf)             Command: <repstopdf --outfile=figs/errorbeta8-eps-conver
 ted-to.pdf figs/errorbeta8.eps>
 (epstopdf)             \includegraphics on input line 666.
@@ -1788,7 +1788,7 @@ e/texmf-dist/fonts/type1/urw/helvetic/uhvb8a.pfb></usr/share/texlive/texmf-dist
 /urw/palatino/uplb8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatin
 o/uplr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/palatino/uplri8a.pf
 b>
-Output written on report.pdf (30 pages, 1792408 bytes).
+Output written on report.pdf (30 pages, 1781199 bytes).
 PDF statistics:
  678 PDF objects out of 1000 (max. 8388607)
  573 compressed objects within 6 object streams
