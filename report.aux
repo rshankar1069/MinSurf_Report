@@ -19,60 +19,101 @@
 \providecommand\HyField@AuxAddToCoFields[2]{}
 \bibstyle{unsrt}
 \providecommand \oddpage@label [2]{}
-\babel@aux{english}{}
-\citation{Sakai1976}
+\select@language{english}
+\@writefile{toc}{\select@language{english}}
+\@writefile{lof}{\select@language{english}}
+\@writefile{lot}{\select@language{english}}
+\citation{wiki:minsurf}
+\citation{gan_biomimetic_2016}
+\citation{gan_biomimetic_2016}
+\citation{noauthor_frei_nodate}
+\citation{noauthor_frei_nodate}
+\citation{gan_biomimetic_2016,wiki:minsurf}
 \@writefile{toc}{\contentsline {section}{\numberline {1}Introduction}{3}{section.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A \textit  {Minimal Surface} with the local area vector that is to be minimized.\relax }}{3}{figure.caption.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A surface with the local area vector.  For this surface to be minimal, $\delimiter 69645069 d\mathbf  {A} \delimiter 86422285 \to \qopname  \relax m{min}$\relax }}{3}{figure.caption.2}}
 \citation{Sakai1976}
-\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Scherk's first surface on $[0,1]^2$\relax }}{4}{figure.caption.3}}
+\citation{Sakai1976}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
-\newlabel{fig:scherk01}{{2}{4}{Scherk's first surface on $[0,1]^2$\relax }{figure.caption.3}{}}
+\newlabel{fig:111}{{2a}{4}{\scriptsize \cite [Gyroid minimal surface]{gan_biomimetic_2016}\relax }{figure.caption.3}{}}
+\newlabel{sub@fig:111}{{a}{4}{\scriptsize \cite [Gyroid minimal surface]{gan_biomimetic_2016}\relax }{figure.caption.3}{}}
+\newlabel{fig:222}{{2b}{4}{\scriptsize The West German pavilion, designed by Frei Otto.\cite {noauthor_frei_nodate}\relax }{figure.caption.3}{}}
+\newlabel{sub@fig:222}{{b}{4}{\scriptsize The West German pavilion, designed by Frei Otto.\cite {noauthor_frei_nodate}\relax }{figure.caption.3}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {2}Background}{4}{section.2}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}General background (don't like this title)}{4}{subsection.2.1}}
-\newlabel{eq:MSE}{{2}{4}{General background (don't like this title)}{equation.2.2}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {2.1}Mathematical basics}{4}{subsection.2.1}}
+\newlabel{eq:MSE}{{1}{4}{Mathematical basics}{equation.2.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Scherk's first surface on $[0,1]^2$\relax }}{5}{figure.caption.4}}
+\newlabel{fig:scherk01}{{3}{5}{Scherk's first surface on $[0,1]^2$\relax }{figure.caption.4}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.2}Numerical solution}{6}{subsection.2.2}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.1}Discretization}{6}{subsubsection.2.2.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Depiction of $\Omega ^h$ with $N=5$, $hN=1$}}{6}{figure.caption.4}}
-\newlabel{eq:dMSE}{{8}{6}{Discretization}{equation.2.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Snippet of the mesh with Finite Differences stencils red/blue: first and second order stencils in $x,y$  green: mixed stencil\relax }}{7}{figure.caption.5}}
-\newlabel{fig:fdmmesh}{{4}{7}{Snippet of the mesh with Finite Differences stencils\\red/blue: first and second order stencils in $x,y$\\ green: mixed stencil\relax }{figure.caption.5}{}}
+\newlabel{section:Discretization}{{2.2.1}{6}{Discretization}{subsubsection.2.2.1}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Depiction of $\Omega ^h$ with $N=5$, $hN=1$}}{6}{figure.caption.5}}
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Snippet of the mesh with Finite Differences stencils red/blue: first and second order stencils in $x,y$  green: mixed stencil\relax }}{7}{figure.caption.6}}
+\newlabel{fig:fdmmesh}{{5}{7}{Snippet of the mesh with Finite Differences stencils\\red/blue: first and second order stencils in $x,y$\\ green: mixed stencil\relax }{figure.caption.6}{}}
+\newlabel{eq:dMSE}{{7}{7}{Discretization}{equation.2.7}{}}
+\newlabel{eq:dx}{{8}{7}{Discretization}{equation.2.8}{}}
+\newlabel{eq:dy}{{9}{7}{Discretization}{equation.2.9}{}}
+\newlabel{eq:dxx}{{10}{7}{Discretization}{equation.2.10}{}}
+\newlabel{eq:dyy}{{11}{7}{Discretization}{equation.2.11}{}}
+\newlabel{eq:dxy}{{12}{7}{Discretization}{equation.2.12}{}}
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {2.2.2}Solution}{8}{subsubsection.2.2.2}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {1}{\ignorespaces Newton's method applied on the discrete MSE\relax }}{8}{algorithm.1}}
 \newlabel{algo:standard-newton}{{1}{8}{Newton's method applied on the discrete MSE\relax }{algorithm.1}{}}
 \@writefile{loa}{\contentsline {algorithm}{\numberline {2}{\ignorespaces Newton's method using Laplace's Equ. as initial guess\relax }}{9}{algorithm.2}}
 \newlabel{algo:laplace-newton}{{2}{9}{Newton's method using Laplace's Equ. as initial guess\relax }{algorithm.2}{}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {2.3}Consequences for a implementation}{10}{subsection.2.3}}
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Requirements on a potential implementation\relax }}{10}{figure.caption.6}}
-\newlabel{fig:requs}{{5}{10}{Requirements on a potential implementation\relax }{figure.caption.6}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Requirements on a potential implementation\relax }}{10}{figure.caption.7}}
+\newlabel{fig:requs}{{6}{10}{Requirements on a potential implementation\relax }{figure.caption.7}{}}
 \@writefile{toc}{\contentsline {section}{\numberline {3}Implementation}{11}{section.3}}
 \@writefile{toc}{\contentsline {subsection}{\numberline {3.1}Software/Solver Design}{11}{subsection.3.1}}
-\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces UML Diagram showing the strucuture of the \textit  {Minimal Surface} software.\relax }}{11}{figure.caption.7}}
-\newlabel{fig:UMLDiag}{{6}{11}{UML Diagram showing the strucuture of the \textit {Minimal Surface} software.\relax }{figure.caption.7}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces UML Diagram with the strucuture of the \textit  {minSurf} software.\relax }}{11}{figure.caption.8}}
+\newlabel{fig:UMLDiag}{{7}{11}{UML Diagram with the strucuture of the \textit {minSurf} software.\relax }{figure.caption.8}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}A note on solving linear systems}{13}{subsection.3.2}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Computing the Jacobian}{15}{subsection.3.3}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.1}AD by hand}{15}{subsubsection.3.3.1}}
+\newlabel{eq:mso}{{14}{15}{AD by hand}{equation.3.14}{}}
+\newlabel{eq:adj1}{{15}{16}{AD by hand}{equation.3.15}{}}
+\newlabel{eq:adj2}{{16}{16}{AD by hand}{equation.3.16}{}}
+\newlabel{eq:adj}{{17}{16}{AD by hand}{equation.3.17}{}}
+\newlabel{eq:adj.driver}{{18}{16}{AD by hand}{equation.3.18}{}}
+\newlabel{lst:prsac}{{1}{17}{Adjoint SAC Code for inner gridpoint $i$ (primal/forward)}{lstlisting.1}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {1}Adjoint SAC Code for inner gridpoint $i$ (primal/forward)}{17}{lstlisting.1}}
+\newlabel{lst:adsac}{{2}{17}{Adjoint SAC Code for inner gridpoint $i$ (adjoint/reverse)}{lstlisting.2}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {2}Adjoint SAC Code for inner gridpoint $i$ (adjoint/reverse)}{17}{lstlisting.2}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {3.3.2}Matrix-free linear solver with \texttt  {dco\_c++}}{17}{subsubsection.3.3.2}}
 \citation{naumann}
 \citation{naumann}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.2}Computing the Jacobian}{12}{subsection.3.2}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Newton's method\relax }}{13}{algorithm.3}}
-\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Matrix-free BiCGSTAB to get $dz$ (adapted from \cite  {naumann})\relax }}{13}{algorithm.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.3}Solving linear systems}{13}{subsection.3.3}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Testing}{14}{subsection.3.4}}
-\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Testing Outputs\relax }}{15}{figure.caption.8}}
-\newlabel{fig:Google Test}{{7}{15}{Testing Outputs\relax }{figure.caption.8}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Nine Periods of Scherk Surface\relax }}{16}{figure.caption.9}}
-\newlabel{fig:Nine Periods of Scherk Surface}{{8}{16}{Nine Periods of Scherk Surface\relax }{figure.caption.9}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{16}{section.4}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Scherk Surface}{16}{subsection.4.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Timings}{17}{subsection.4.2}}
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Parallel Efficiency and Speedup plots for different Jacobian methods\relax }}{17}{figure.caption.10}}
-\newlabel{fig: Timing}{{9}{17}{Parallel Efficiency and Speedup plots for different Jacobian methods\relax }{figure.caption.10}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusions and outlook}{17}{section.5}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {3}{\ignorespaces Newton's method\relax }}{18}{algorithm.3}}
+\newlabel{algo:matfree-newton}{{3}{18}{Newton's method\relax }{algorithm.3}{}}
+\newlabel{lst:vot}{{3}{18}{Vectors of Tangents by Overloading}{lstlisting.3}{}}
+\@writefile{lol}{\contentsline {lstlisting}{\numberline {3}Vectors of Tangents by Overloading}{18}{lstlisting.3}}
+\newlabel{eq:tg1}{{19}{18}{Matrix-free linear solver with \texttt {dco\_c++}}{equation.3.19}{}}
+\newlabel{eq:tg2}{{20}{18}{Matrix-free linear solver with \texttt {dco\_c++}}{equation.3.20}{}}
+\newlabel{eq:tg}{{21}{18}{Matrix-free linear solver with \texttt {dco\_c++}}{equation.3.21}{}}
+\@writefile{loa}{\contentsline {algorithm}{\numberline {4}{\ignorespaces Matrix-free BiCGSTAB to get $\boldsymbol  {dz}$ (adapted from \cite  {naumann})\relax }}{19}{algorithm.4}}
+\newlabel{algo:bicgstab}{{4}{19}{Matrix-free BiCGSTAB to get $\vect {dz}$ (adapted from \cite {naumann})\relax }{algorithm.4}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {3.4}Testing}{20}{subsection.3.4}}
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Testing Outputs\relax }}{21}{figure.caption.9}}
+\newlabel{fig:Google Test}{{8}{21}{Testing Outputs\relax }{figure.caption.9}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Nine Periods of Scherk Surface\relax }}{22}{figure.caption.10}}
+\newlabel{fig:Nine Periods of Scherk Surface}{{9}{22}{Nine Periods of Scherk Surface\relax }{figure.caption.10}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {4}Results}{22}{section.4}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.1}Scherk Surface}{22}{subsection.4.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.2}Timings}{23}{subsection.4.2}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Parallel Efficiency and Speedup plots for different Jacobian methods\relax }}{23}{figure.caption.11}}
+\newlabel{fig: Timing}{{10}{23}{Parallel Efficiency and Speedup plots for different Jacobian methods\relax }{figure.caption.11}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Conclusions and outlook}{23}{section.5}}
+\bibstyle{apalike}
 \bibdata{bibliography}
-\bibcite{Sakai1976}{{1}{}{{}}{{}}}
-\bibcite{naumann}{{2}{}{{}}{{}}}
+\bibcite{wiki:minsurf}{{1}{}{{}}{{}}}
+\bibcite{gan_biomimetic_2016}{{2}{}{{}}{{}}}
+\bibcite{noauthor_frei_nodate}{{3}{}{{}}{{}}}
+\bibcite{Sakai1976}{{4}{}{{}}{{}}}
+\bibcite{naumann}{{5}{}{{}}{{}}}
 \providecommand\NAT@force@numbers{}\NAT@force@numbers
-\@writefile{toc}{\contentsline {section}{\numberline {A}User manual}{19}{appendix.A}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Compilation}{19}{subsection.A.1}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Running a simulation}{19}{subsection.A.2}}
+\@writefile{toc}{\contentsline {section}{\numberline {A}User manual}{25}{appendix.A}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Compilation}{25}{subsection.A.1}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Running a simulation}{25}{subsection.A.2}}
 \global\csname @altsecnumformattrue\endcsname
-\global\@namedef{scr@dte@section@lastmaxnumwidth}{15.32977pt}
+\global\@namedef{scr@dte@section@lastmaxnumwidth}{13.51204pt}
 \global\@namedef{scr@dte@subsection@lastmaxnumwidth}{23.84888pt}
 \global\@namedef{scr@dte@subsubsection@lastmaxnumwidth}{29.01736pt}

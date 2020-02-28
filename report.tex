@@ -9,9 +9,11 @@
 \usepackage{scrlayer-scrpage}
 \usepackage[authoryear]{natbib}
 \usepackage{csquotes}
+\usepackage[normalem]{ulem}
 \usepackage{xcolor}
 \definecolor{@darkblue}{RGB}{0,0,140}
 \definecolor{@darkgreen}{RGB}{0,100,70}
+\definecolor{@darkred}{RGB}{140,5,5}
 \hypersetup{
 	colorlinks   = true, %Colours links instead of ugly boxes
 	urlcolor     = @darkblue, %Colour for external hyperlinks
@@ -62,7 +64,7 @@ minimum height=2em]
 % ---------------------  Title page setup ----------------------------
 % Title Page
 \title{Minimal Surfaces}
-\author{add your matriculation numbers here!\\Chenfei Fan \\  Praveen Mishra\quad 389850 \\ Sankarasubramanian Ragunathan\quad 389851\\ Philipp Schleich\quad 391779}
+\author{Chenfei Fan \quad 390189 \\  Praveen Mishra\quad 389850 \\ Sankarasubramanian Ragunathan\quad 389851\\ Philipp Schleich\quad 391779}
 %
 \subject{Report \\ Simulation Sciences Laboratory}
 \date{\today \\ \vspace{0.9cm}}
@@ -113,24 +115,48 @@ minimum height=2em]
 \onehalfspacing
 % #########################################################################
 \section{Introduction}
-\textit{A Minimal Surface is defined as a surface that has zero mean curvature}. A minimal surface is characterized as surface of minimal surface area for the given boundary conditions.For example, a plane is a trivial minimal surface.
+This report concludes our SiSc Laboratory Project in WS19/20, with the goal, to implement a software, that is able to numerically compute so called \emph{Minimal Surfaces}. As one might intuitively think, when we speak about surfaces, minimal has something to do with its surface. To this end, we define a \emph{Minimal Surface} to be a surface that locally minimizes its area (that is, the surface has a zero mean curvature over its domain). A trivial example is given by a plane. \cite{wiki:minsurf}
+
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.5\linewidth]{./figs/minsurfIntro.png}
-	\caption{A \textit{Minimal Surface} with the local area vector that is to be minimized.}
+	\caption{A surface with the local area vector.\\ For this surface to be minimal, $\lVert d\mathbf{A} \rVert \to \min $}
 \end{figure}
-The minimal surface is obtained as a solution to the Lagrange's equation (also known as the \textit{Minimal-Surface Equation} (MSE)) given by:
-\begin{align}
-	(1 + z_{y}^{2})z_{xx} - 2z_{x}z_{y}z_{xy} + (1+z_{x}^{2})z_{yy} = \mathcal{F}[z] &= 0 && \text{in} \; \Omega \\
-	\notag
-	z(x,y) &= g(x,y) && \text{on} \; \partial \Omega
-\end{align}
-MSE is a Nonlinear Elliptic PDE that has a combination of first and second order differential terms in both $x$ and $y$. Being a nonlinear PDE, we do not readily obtain an analytical solution necessitating the use of numerical methods, such as linearization of MSE using Newton-Raphson iterations, to solve the problem. It is also important to bear in mind that as $z$ has second order derivative terms, we need $z \in \mathcal{C}^{2}$ which means that we need to provide smooth enough boundary conditions on $\partial \Omega$ in order to be able to compute the derivative terms in MSE.
 
-MSE is used in designing structures that have great tensile strength and also to minimize the cost of construction as structural designs resulting from MSE require less material. MSE is also used to provide a relativistic description on the formation of Black Holes. Material lattice structures of biological organisms such as butterfly wings are minimal surface structures (Butterfly wings have a Gyroidal minimal surface). Hydrophobic  co-polymer structures also take the shape of a minimal surface in order to reduce the energy of the structure arising due to surface tension. 
+Minimal surfaces appear in nature as well as they have some applications in engineering, while they can be observed both in macro- and microscopic length scale.
+\begin{itemize}
+	\item Macroscopic scale:
+	\begin{itemize}
+		\item Architectural design: Designing structures as minimal surfaces 
+		\item Soap bubbles and dew drops
+		\item Relativistic description of black holes
+	\end{itemize}
+	\item Microscopic scale:
+	\begin{itemize}
+		\item Material lattice structure
+		\item Hydrophobic co-polymer structures
+		\item Butterfly wings
+	\end{itemize} 
+\end{itemize}
+\begin{figure}
+	\vspace{-40pt}
+	\centering
+	\begin{subfigure}{.4\linewidth}
+	\centering	
+		\includegraphics[width=\linewidth]{./figs/BioGyroid.jpg}
+		\caption{\scriptsize \cite[Gyroid minimal surface]{gan_biomimetic_2016}}\label{fig:111}
+	\end{subfigure}
+\hfill
+	\begin{subfigure}{.4\linewidth}
+	\centering
+		\includegraphics[width=\linewidth]{./figs/Architecture.jpg}
+		\caption{\scriptsize The West German pavilion, designed by Frei Otto.\cite{noauthor_frei_nodate}}\label{fig:222}
+	\end{subfigure}
+\end{figure}
+Structures whose geometry makes up a minimal surface typically have large tensile strength, which can be used e.g. for man-made lightweight design in civil engineering (cf. figure~\ref{fig:111}) or lightweight design given by evolution, such as butterfly wings (gyroids, cf. figure~\ref{fig:222}. MSE is also used to provide a relativistic description on the formation of Black Holes. Material lattice structures of biological organisms such as butterfly wings are minimal surface structures ). Hydrophobic co-polymer structures also take the shape of a minimal surface in order to reduce the energy of the structure arising due to surface tension. \cite{gan_biomimetic_2016, wiki:minsurf}
 % #########################################################################
 \section{Background}
-\subsection{General background (don't like this title)}
+\subsection{Mathematical basics}\label{sec:mathbasics}
 We look at surfaces in $ \mathbb{R}^3 $, defined over an open set $\Omega \subset \mathbb{R}^2$. 
 The surface of desire should contain the least possible area among all possible surfaces, that assume given values on the boundary of $\Omega$, denoted by $\partial \Omega$. \cite{Sakai1976}
 
@@ -164,7 +190,7 @@ which is the limit $n\to \infty$ of
 \lim\limits_{y\to \pm 1} \to n \quad, 0 \le x \le 1 \\
 \lim\limits_{x\to \pm 1} \to -n \quad, 0 \le y \le 1.
 \end{align}
-
+\cite{wiki:scherk}
 
 The numerical solution of the MSE will require setting approbiate boundary conditions. Since $\log \left( \frac{\cos (\pi(x-\frac{1}{2}))}{\cos (\pi(y-\frac{1}{2}))} \right) \to \pm \infty $ on $\partial\Omega$, this is numerically not very practical. 
 
@@ -241,8 +267,8 @@ In this project, we are supposed to solve the MSE numerically on $\Omega \equiv 
 
 We choose to discretize the MSO on $\Omega^h$ by Finite Differences, since this is usually the easiest way to go, and on a structured grid, would anyways yield similar discrete equation as in Finite Volume or Finite Element methods.
 
-To obtain a second order consistent discrete MSO (\mSurfDisc{\cdot}), we use central difference stencils on the first, second and mixed derivative. Since all these stencils have make only use of immediate neighours, there is no need to treat nodes close to the boundary differently, since the boundary is given by $g(\cdot)$.
-
+To obtain a second order consistent discrete MSO ($\mSurfDisc{\cdot}$), we use central difference stencils on the first, second and mixed derivative, assuming that the underlying solution is at least twice continuously differentiable. This can be perceived as a constraint on the boundary conditions that are set in the numerical solution: In case $g$ does not have sufficient regularity, convergence is not guaranteed. Since all these stencils have make only use of immediate neighours, there is no need to treat nodes close to the boundary differently, since the boundary is given by $g(\cdot)$.
+\newpage 
 This way, we obtain a discrete version of \eqref{eq:MSE}:
 \begin{align}
 	\left(1+\Dx{z^h}^2\right)\Dyy{z^h}-\Dx{z^h} \Dy{z^h}\Dxy{z^h} + \left(1+\Dy{z^h}^2\right)\Dxx{z^h} = \mSurfDisc{z^h} &= 0  \quad \text{in } \Omega^h \notag \\
@@ -366,30 +392,57 @@ Last but not least, a software implementation also needs to be able to perform a
 \section{Implementation}
 %##########################################################################
 \subsection{Software/Solver Design}
+In order to meet the requirements, that have been identified earlier, we create four different classes. These classes are individually responsible for a certain subset of tasks. 
+
+A user interface will be given by a input file, called \texttt{params.in}, which is parsed by the class \texttt{inputparser}. Creating an object of \texttt{inputParser} thus allows us to access the input file from any other place in the code. Further, \texttt{cartesianGrid} takes care of the discretization, and an instance of such a grid enables to access the specifics of our equidistant, square mesh. The most important part of our code is made up by the class \texttt{solver}, which contains all required numerical (sub-)routines. Last but not least, the \texttt{postProcessor}-class builds the connection to the user after having completed a simulation, providing information about solution and convergence.
+  
 \begin{figure}[H]
 	\includegraphics[width=\textwidth]{./figs/ReportUML.pdf}
-	\caption{UML Diagram showing the strucuture of the \textit{Minimal Surface} software.}
+	\caption{UML Diagram with the strucuture of the \textit{minSurf} software.}
 	\label{fig:UMLDiag}
 \end{figure}
-
-Figure \ref{fig:UMLDiag} shows the structure of the software, the classes and their associated functions, developed in order to solve the minimal surface problem. 
+\newpage
+Figure \ref{fig:UMLDiag} shows the structure of the software, the classes and their associated functions, developed in order to solve the minimal surface problem. In the following, the individual classes are again described in more detail.
 \begin{itemize}
-	\item {\textbf{inputParser:} This class consists of functions necessary to read all the parameters required to control and execute the minimal surface software. This class takes in \texttt{params.in} which contains all the necessary parameters such as the \# of mesh elements, boundary conditions, option for the method of Jacobian computation etc... as an input to be parsed and processed. This class also depends on an external library, \texttt{ATMSP Expression Parser}, to parse the boundary conditions.}
-	\item {\textbf{cartesianGrid:} This class consists of functions that help in the generation of a uniform cartesian mesh required for solving the FD problem. It also has functions required to return the $x$ and $y$ coordinates of a node required to apply the boundary conditions. It also provides function calls to allocate separate storage of boundary and inner node indices.}
-	\item {\textbf{solver:} This class consists of functions required to solve the minimal surface problem using Newton-Raphson method. The function to apply the boundary conditions is specified inside this class. \texttt{ATMSP Expression Parser} library is again required for this as the library provides methods to parse the boundary condition given as a string expression inside \texttt{params.in} into an executable byte code. It also uses \texttt{DCO} library to compute the Jacobian required for the  Newton Raphson iterations. Separate function definitions are created to run the solver for different options of Jacobian such as Symbolic differentiation, AD by Hand and Matrix-free methods based on the option provided inside \texttt{params.in}}
-	\item  {\textbf{postProcessor:} This class consists of functions designed to write the solver residual as a CSV file and the resulting minimal surface as a VTS file to be visualized inside \textit{Paraview}. To write the VTS file, the class uses the \texttt{VTK} library. The class also provides a function to compare the convergence of FD to analytical solution for the special case of a Scherk surface where the convergence rate is measured using both the \textit{Max Norm} as well as the  \textit{l2-Norm}.}
+	\item {\texttt{inputParser:} This class consists of functions necessary to read all the parameters required to control and execute the minimal surface software. This class takes in \texttt{params.in} which contains all the necessary parameters such as the number of mesh elements\footnote{represented by $N$, the number of elements per dimension}, boundary conditions, option for the method of Jacobian computation, etc. as an input to be parsed and processed. This class also depends on an external library, \texttt{ATMSP Expression Parser}\footnote{We modified this parser slightly, such that it is also able to parse piece-wise boundary conditions. The original library is available at \url{https://sourceforge.net/projects/atmsp/}}, to parse the boundary conditions.}
+	\item {\texttt{cartesianGrid:} This class consists of functions that help in the generation of a uniform cartesian mesh required for solving the Finite Difference discretization. It also has functions able to return the $x$ and $y$ coordinates of a node required to apply the boundary conditions. Moreover, it provides methods to allocate separate storage of boundary and inner node indices.}
+	\item {\texttt{solver:} This class consists of functions required to solve the minimal surface problem using Newton-Raphson method. The function to apply the boundary conditions is specified inside this class. \texttt{ATMSP Expression Parser} library is again required for this as the library provides methods to parse the boundary condition given as a string expression inside \texttt{params.in} into an executable byte code. It also uses \texttt{DCO} library to compute the Jacobian required for the  Newton Raphson iterations. Separate function definitions are created to run the solver for different options of Jacobian such as Symbolic differentiation, AD by Hand and Matrix-free methods based on the option provided inside \texttt{params.in}}
+	\item  {\texttt{postProcessor:} This class contains functions designed to write the solver residual as a CSV file and the resulting minimal surface as a VTS file allowing 3D visualization using \textit{Paraview}. To write the VTS file, the class uses the \texttt{VTK} library. It also provides a function to compare the convergence of the numerical towards the analytical solution for the special case of the Scherk surface. The error is measured using both the  maximum-norm ($\lVert z-z^h \rVert_\infty := \max\limits_{1\le i,j\le N} \lvert z_{ij}-z^h_{ij}\rvert$ ) as well as the  $\ell_2$-norm ($\lVert z-z^h \rVert_2 := \sqrt{ \frac{1}{N^2} \sum_{i,j=1}^{N} \big(z_{ij}-z_{ij}^h\big)^2}$).}
 \end{itemize}
 %##########################################################################
+\subsection[A note on solving linear systems]{A note on solving linear systems (does not affect the matrix-free solver)}
+When solving the MSE, we deal in general with sparse, non-symmetric systems. The \texttt{Eigen} library (we use the release Eigen 3.3.7) provides the following sparse linear algebra methods\footnote{Due to the severe sparsity of the matrix, we did not consider a dense matrix implementation.}, that would be suitable for our problem:
+\begin{itemize}
+	\item SparseLU -- a sparse version of LU-decomposition 
+	\item BiCGSTAB -- Stabilized biconjugate gradient descent (more costly than CG, but suitable for general square matrices). Essentially, this represents a CG-routine inside GMRES(1)
+	\item GMRES -- Generalized Minimum Residual Method 
+\end{itemize}
+The latter two are linear iterative schemes suitable for general matrices, while we exclude GMRES from now on, as BiCGSTAB is slightly more efficient according to benchmarks of the \texttt{Eigen} library\footnote{\url{http://eigen.tuxfamily.org/dox/group__TopicSparseSystems.html}, in the very bottom, assuming both use the ILUT preconditioner}. In contrast to LU decomposition, which is a direct method, linear iterative schemes might be faster, but do not guarantee convergence. This depends on the system to be solved. As it turns out, the MSE using Finite Differences yields sufficiently well behaved systems, that typically converge.
+
+The convergence of iterative schemes can be (dependent on the system) boosted by the use of preconditioners. In \texttt{Eigen}, either the identity, a Jacobi (diagonal, iff non-zero) or a incomplete LU-decomposition (ILUT) preconditioner are available, while the latter in general has the most potential to speed up convergence. 
+
+Testing these methods on our initial-guess subroutine, which solves the Laplace-equation, has yielded, that, while SparseLU is faster than BiCGSTAB+Jacobi, the right tuning of ILUT in combination with BiCGSTAB is fastest. 
+
+Still though, our implementation inside the Newton-iteration uses bare BiCGSTAB with Jacobi-preconditioner. The reason therefore is, that we chose to represent the discrete system not as the reduced system (i.e. boundary information is brought onto the right-hand-side, yielding a system size of $(N-2)^2$ instead of $N^2$), but as the full system\footnote{We discussed this with our supervisor in the beginning of the project, and concluded that solving the full system would not have substantial drawbacks and would be more intuitive to implement.}. While this has no impact on the feasibility of a LU-decompisition when solving the Laplace-equation, it prohibits a LU-decompisition on the full system. 
+
+Solving the Laplace-equation can be done in one step -- this means, we prescribe the boundary information by putting the associated values on the right-hand-side, and insert an (almost) empty row\footnote{With empty row, we mean a row, that is only made up by 0-elements.}, that carries a 1 on the place, that is to be multiplied with the boundary value at its respective position. In conclusion, the system matrix, that is to be inverted, has still full rank $\Leftrightarrow$ does not contain an empty row. What changes now for the linear systems inside the Newton iterations? We start with an initial guess $z^{(0)}$, which already must contain the boundary information. The linear systems arise, when we want to get from $z^{(i)}$ to $z^{(i+1)}$ -- the difference $dz^{(i)}$ resulting from the linear solve must not change the boundary information, since both  $z^{(i)}$ and $z^{(i+1)}$ inherit already the correct values from $z^{(0)}$. As a consequence the Jacobian of the MSO $\nabla\mSurfDisc{z^{(i)}}$ has an empty row, whenever the row index corresponds to a boundary node. This would prevent us from using SparseLU or an iterative scheme with the ILUT preconditioner. BiCGSTAB+Identity still works, since it only relies on matrix-vector products and scalar products, and multiplying empty rows is not forbidden (but unnecessary work)\footnote{Jacobi preconditioner also can be used, since it only acts if the diagonal entry is non-zero}.
+
+We can overcome this by putting some little extra effort, and setting a 1-entry on the diagonal of the Jacobian of the discrete MSO, if the row corresponds ot a boundary index. This does not change the result, since we are exact on the boundary for all iterations, thus the right-hand-side in this case is 0. By such a procedure, we end up with a non-singular Jacobian, and can use direct methods and preconditioners. As before, numerical tests suggest that for the right tuning, BiCGSTAB+ILUT is the fastest option for our problem, while SparseLU would be still faster that BiCGSTAB+Jacobi. 
+Next, note, that the Newton procedure does not require the 'exact' value of $dz^{(i)}$, but can be satisfied with a solution up to a certain tolerance \footnote{keyword in \texttt{params.in}: $\textsc{tol}_\text{linsolver}$}, on one hand enables us to choose this tolerance of the same order\footnote{in some cases even slightly larger -- this requires possibly more iterations, while each linear solve is less and less costly}. This allows us to additionally boost the runtime of the iterations by choosing a smart value for this linear solve tolerance. 
+
+Therefore, we choose this to be the default in our solver. We are not providing a switch option to change the solver, because the software is only capable of solving this very PDE, which means we do not have to expect a substantially different structure of the Jacobian\footnote{Depending on boundary conditions, it has different entries, but the non-zero pattern stays the same in general.}. Apart from that, as stated before, the iterative scheme does not rely on exact updates, which can only be exploited using iterative schemes. Therefore, a single, but optimal, solver option shall be sufficient. 
+
+
 \subsection{Computing the Jacobian}
 Within the Newton iterations, it is necessary to compute the inverse of the Jacobian of the discrete MSO and solve the resulting linear systems. One well-known approach is using Finite Differences to further discretise the discrete MSO, but it is not efficient when the mesh is very fine. As a result, Algorithmic Differentiation is used in this problem. We implemented this procedure following two different strategies:
 \begin{itemize}
 	\item Build the Jacobian by Algorithmic Differentiation (AD by hand) and compute its inverse by existing linear solvers.
-	\item Do not explicitly build the Jacobian, but use existing AD libraries to multiply it with vectors. Substitute this into the self-implemented matrix-free linear solver.
+	\item Do not explicitly build the Jacobian, but use existing AD libraries to extract its action on certain vectors. Substitute this into the self-implemented matrix-free linear solver.
 \end{itemize}
-To get an overview of the problem's dimensions and properties as well as to provide a solution to verify other approaches based on Algorithmic Differentiation, we first implemented a straightforward ("hard-coded") method to derive the required Jacobian $\nabla \mathtt{F}(z)$ by substituting Equ.~\refeq{eq:dx}-\refeq{eq:dxy} into Equ.~\refeq{eq:dMSE} and taking its derivatives of $\vect{z}$. As is indicated in section~\ref{section:Discretization}, the resulting Jacobian is sparse, so it is stored in \texttt{Eigen::SparseMatrix} format by \texttt{Eigen} library. Then solve $dz = \nabla\mSurfDisc{z^h_k}\inv y$ by Biconjugate gradient stabilized method (BiCGSTAB). It is used instead of BiCG or CG since $\nabla\mSurfDisc{z^h_k}$ is not symmetric in general.
+To get an overview of the problem's dimensions and properties as well as to provide a solution to verify other approaches based on Algorithmic Differentiation, we first implemented a straightforward ("hard-coded") method to derive the required Jacobian $\nabla \mathtt{F}(z)$ by substituting Equ.~\eqref{eq:dx}-\eqref{eq:dxy} into Equ.~\eqref{eq:dMSE} and taking its derivatives of $\vect{z}$. As is indicated in section~\ref{section:Discretization}, the resulting Jacobian is sparse, so it is stored in \texttt{Eigen::SparseMatrix} format by \texttt{Eigen} library. Then solve $dz = \nabla\mSurfDisc{z^h_k}\inv y$ by Biconjugate gradient stabilized method (BiCGSTAB). It is used instead of BiCG or CG since $\nabla\mSurfDisc{z^h_k}$ is not symmetric in general.
 
 \subsubsection{AD by hand}
-As is shown in section~\ref{section:Discretization}, the discrete MSO of each gridpoint has only support from its 9 neighbors. Considering the derivation of the Jacobian as a loop of gridpoint-wise MSO over each gridpoint (which is parallelizable in nature), the gridpoint-wise discrete MSO for each gridpoint $(i,j)$ can be generalized as Equ.~\refeq{eq:mso}, where $h$ is a function which has 1 output $\mathtt{F}\rb{z[i][j]}$ and 9 inputs $z[i'][j'], i'\in\{i, i\pm1\}, j'\in\{j,j\pm1\}$. Given this function primal of $ \mathtt{F}: \mathbb{R}^n\rightarrow 1 $ (here $n=9$), it is advantageous to use a first-order adjoint model as Equ.~\refeq{eq:adj1}, \refeq{eq:adj2}. By seeding the output $y_{(1)}$ one can harvest the whole Jacobian row-wise, where one row of the Jacobian has only 9 non-zero entries. The function signature of the overloaded function is stated in Equ.~\refeq{eq:adj}. By the driver function in Equ.~\refeq{eq:adj.driver} (assume an inner gridpoint $(i,j)$ has index $idx$), one column of the Jacobian $a1\_z[idx][:]$ together with the primal $z[idx]$ is harvested for each gridpoint $(i,j)$.
+As is shown in section~\ref{section:Discretization}, the discrete MSO of each gridpoint has only support from its 9 neighbors. Considering the derivation of the Jacobian as a loop of gridpoint-wise MSO over each gridpoint (which is parallelizable in nature), the gridpoint-wise discrete MSO for each gridpoint $(i,j)$ can be generalized as Equ.~\eqref{eq:mso}, where $h$ is a function which has 1 output $\mathtt{F}\rb{z[i][j]}$ and 9 inputs $z[i'][j'], i'\in\{i, i\pm1\}, j'\in\{j,j\pm1\}$. Given this function primal of $ \mathtt{F}: \mathbb{R}^n\rightarrow 1 $ (here $n=9$), it is advantageous to use a first-order adjoint model as Equ.~\eqref{eq:adj1}, \eqref{eq:adj2}. By seeding the output $y_{(1)}$ one can harvest the whole Jacobian row-wise, where one row of the Jacobian has only 9 non-zero entries. The function signature of the overloaded function is stated in Equ.~\eqref{eq:adj}. By the driver function in Equ.~\eqref{eq:adj.driver} (assume an inner gridpoint $(i,j)$ has index $idx$), one column of the Jacobian $a1\_z[idx][:]$ together with the primal $z[idx]$ is harvested for each gridpoint $(i,j)$.
 
 \begin{equation}
 \mathtt{F}\rb{z[i][j]} = h\rb{z[i'][j'], i'\in\{i, i\pm1\}, j'\in\{j,j\pm1\}}\label{eq:mso}
@@ -458,7 +511,7 @@ a1_z[i][i-1] = a1_dx/(-2*h)+...;
 \end{lstlisting}
 \end{minipage}
 
-\subsubsection{matrix-free linear solver with \texttt{dco\_c++}}
+\subsubsection{Matrix-free linear solver with \texttt{dco\_c++}}
 \texttt{dco\_c++} is a library that implements Algorithmic Differentiation by overloading in C++. It provides the same function as AD by hand in terms of harvesting the Jacobian. However, if all manual computation is eliminated, it is unable to exploit the sparsity of the Jacobian, so we need $\mathcal{O}(N^4)$ space to store it, which for large $N$ is impossible. Therefore, we implemented a matrix-free linear solver inside Newton's method as described in Algorithm~\ref{algo:matfree-newton}, which does not require explicitly building the Jacobian, but instead apply the vector tangent code overloaded by \texttt{dco\_c++} as a matrix-vector multiplication tool which multiplies the Jacobian with the seed to harvest the result.
 
 In general, the MSO is an operator of $ \mathtt{F}: \mathbb{R}^{N\times N}\rightarrow \mathbb{R}^{N\times N} $, which has the same computational complexity for vector tangent mode and vectors adjoint mode. We choose vector tangent mode in our implementation.
@@ -476,7 +529,7 @@ In general, the MSO is an operator of $ \mathtt{F}: \mathbb{R}^{N\times N}\right
 	\end{algorithmic}
 \end{algorithm}
 
-The first-order vector tangent mode for $\mathtt{F}: \mathbb{R}^{N\times N}\rightarrow \mathbb{R}^{N\times N} $ is defined as Equ.~\refeq{eq:tg1}, \refeq{eq:tg2}, and its function signature is defined in Equ.~\refeq{eq:tg}. By substituting Equ.~\refeq{eq:tg1} into an existing linear solver (for example BiCGSTAB, as we implemented in Algorithm~\ref{algo:bicgstab}), $\vect{dz} = \vect{A}\inv \vect{y}$ is solved by this iterative approach.
+The first-order vector tangent mode for $\mathtt{F}: \mathbb{R}^{N\times N}\rightarrow \mathbb{R}^{N\times N} $ is defined as Equ.~\eqref{eq:tg1}, \eqref{eq:tg2}, and its function signature is defined in Equ.~\eqref{eq:tg}. By substituting Equ.~\eqref{eq:tg1} into an existing linear solver (for example BiCGSTAB, as we implemented in Algorithm~\ref{algo:bicgstab}), $\vect{dz} = \vect{A}\inv \vect{y}$ is solved by this iterative approach.
 
 The advantage of the matrix-free linear solver with \texttt{dco\_c++} is that it does not require any prior knowledge of the operator. Given any primal \texttt{y = F(z)} where $ \mathtt{F}: \mathbb{R}^{N\times N}\rightarrow \mathbb{R}^{N\times N} $, only several lines of code is needed for the vector tangent mode by overloading, as is shown in Code~\ref{lst:vot}.
 \begin{lstlisting}[caption={Vectors of Tangents by Overloading},label=lst:vot,language=C++]
@@ -533,21 +586,17 @@ Y^{(1)} &:= \nabla \mathtt{F}(\textbf{x}) \cdot X^{(1)}\label{eq:tg2}
 
 There are also drawbacks of the matrix-free linear solver. One is already noted, that it is not as flexible as AD by hand to exploit the structure of the Jacobian (for example, sparsity) to reduce computation and space complexity. It remains an interesting topic for researches. Another issue is that the mostly sequential matrix-free solver is not easy to parallelize. Although there exist some better implementations than ours, it is not user-friendly to require any implementation of linear solvers. For example, if the user knows the Jacobian is symmetric, a CG method which is faster than BiCGSTAB must be implemented from scratch.
 
-\subsection{Solving linear systems}
 
-	\textbf{I tested a bit now, and will push also to the code, timings ideally after that:
-	seems like sparseLU is faster for getting the initial guess, so I will implement that.\\
-	for the loops, bicgstab is still advantageous as we can greatly reduce TOL\_linsolver.}
-\normalfont
+\newpage 
 \subsection{Testing}
-For testing the validity, we used Google Tests as our testing framework. The unit testing library supports multi-platforms and compilers and allows for source testing, without large source modification. Since the code was very modular, structured and independently developed in parts, unit testing was fairly simple as well. Associated data types storing computational values and Classes and their respective Functions were checked for validity. 
-Depending on type of debugging, the library offers four broad ways of testing as represented in the figure above.
+For testing the validity, we used Google Tests as our testing framework. The unit testing library supports multi-platforms and compilers and allows for source testing, without large source modification. Since the code was very modular, structured and independently developed in parts, unit testing was fairly simple as well. Associated data types storing computational values and classes and their respective methods were checked for validity. 
+Depending on the type of debugging, the library offers four broad ways of testing as represented in the figure above.
 
 \begin{itemize}
   \item Negation Test: In case a test fails under non-assertive statements, test function returns the expected value as compared to the manual value which makes unit debugging much simpler and faster.
-  \item Succeed Test: Used for testing blocks or modules of code for successful compilation error. Vastly helpful for module wise checks while debugging.
- \item Expectational Test: States if the expected and returned value of the test matches and gives a green flag for success
- \item Assert Test: Fatal Testing. Used to assert program specific mandatory conditions for successful build and execution of code. Stops the compilation in case of failure.
+  \item Succeed Test: Used for testing blocks or modules of code for successful compilation error. Very helpful for module wise checks while debugging.
+ \item Expectational Test: States if the expected and returned value of the test matches and gives a green flag in case of success.
+ \item Assert Test (Fatal Testing): Used to assert program specific mandatory conditions for a successful build and execution of code. Stops the compilation in case of failure.
 \end{itemize}
 
 \begin{figure}
@@ -556,41 +605,41 @@ Depending on type of debugging, the library offers four broad ways of testing as
 	\caption{Testing Outputs}\label{fig:Google Test}
 \end{figure}
 
-The test part of the program gets called recursively by CMake. It creates an executable and the same can then be accessed like the main program albeit just tests with appropriate input from parameters file. All the necessary dependent header files were to be manually added for accessing the classes and their methods.
-For testing purposes, the code was sectioned in three broad parts as per modularity namely, Input parser, Cartesian Grid and Solver.  
+The test part of the program gets called recursively by CMake. It creates an executable and the same can then be accessed like the main program, albeit just tests with appropriate input from the \texttt{params.in} file. All the necessary dependent header files  had to be manually added for accessing the classes and their methods.
+For testing purposes, the code was sectioned in three broad parts as per modularity namely, \texttt{inputParser}, \texttt{cartesianGrid} and \texttt{solver}.  
 \begin{itemize}
-  \item Input Parser: An instance of class Input Parser (InputParserObj) is created in the testing module. Various setter functions set the values after reading the input from params file and the same can then be validated by the expected values returned by getter functions.
-  \item Cartesian Grid: Simple unit tests pertaining to setting up of cartesian grid, sorting algorithm and the respective node lists were tested for lexicographical ordering. The same is done for both the boundary as well as inner nodes.
- \item Solver: Primitive solver was tested for the independent unit functional arguments. For example the functional dependency of solver for applying boundary conditions (executed by the function applyBC()) were tested for unit arguments. A unit (or null) test vector is passed as an argument after creating an instance of the class 'solver' and calling the function by the same instance. The test vector is then tested for validity like first and last element  values.  
+  \item \texttt{inputParser}: An instance of class Input Parser (InputParserObj) is created in the testing module. Various setter functions set the values after reading the input from params file and the same can then be validated by the expected values returned by getter functions.
+  \item \texttt{cartesianGrid}: Simple unit tests pertaining to setting up of cartesian grid, sorting algorithm and the respective node lists were tested for lexicographical ordering. The same is done for both the boundary as well as inner nodes.
+ \item \texttt{solver}: Primitive solver was tested for the independent unit functional arguments. For example the functional dependency of solver for applying boundary conditions (executed by the function applyBC()) were tested for unit arguments. A unit (or null) test vector is passed as an argument after creating an instance of the class 'solver' and calling the function by the same instance. The test vector is then tested for validity like first and last element  values.  
  \item Analytical Scherk : To test the validity of the solver, analytical solution with constrained boundary arguments are generated and error produced with respect to the solver solution. The computed error is tested for a small tolerance in maximum norm.
 \end{itemize}
 
-Remark : For testing the validity of solver against the Scherk test, the same could not be implemented in Google Tests. The issue could be narrowed down to a linker error which involves usage of the dco library as one of its dependencies and results in either 'core dump' bad memory access error failure by cmake to add tests recursively (stce error). Independent testing would demand a lot of code refactoring and hence could be put up as a scope for improvement. Hence, the same test was replicated in the post processor file and tested for a nominal tolerance. 
+Remark: For testing the validity of solver against the Scherk test, the same could not be implemented in Google Tests. The issue could be narrowed down to a linker error which involves usage of the dco library as one of its dependencies and results in either 'core dump' bad memory access error failure by cmake to add tests recursively (stce error). Independent testing would demand a lot of code refactoring and hence could be put up as a scope for improvement. Hence, the same test was replicated in the post processor file and tested for a nominal tolerance.
 
 % #########################################################################
 \section{Results}
-\subsection{Scherk Surface}
-Scherk surface is a classic example of minimal surface. Scherk gave his two surfaces in 1834, first doubly periodic and second singly. Consider the following domain in the Euclidean plane: 
- \begin{equation}
-	u= {(-\pi/2,+\pi/2) x (-\pi/2,+\pi/2)} \rightarrow \mathbb{R}^{3}
-\end{equation} 
-such that
- \begin{equation}
-	 lim \underset{y\rightarrow +\underset{-}\pi/2}  u (x, y)=  { +n  (-\pi/2< x < +\pi/2)}
-\end{equation} 
- \begin{equation}
-        lim  \underset{x\rightarrow +\underset{-}\pi/2}  u (x, y)=  { -n   (-\pi/2< y< +\pi/2)}
-\end{equation} 
-Thus, u satisfies the minimal surface equation.The limiting surface as n tends to infinity is called the Scherk surface.Hence, the general Scherk surface over the square domain is given by:
-  \begin{equation}
-	\Sigma = \left\{ \left. \left(x, y, \log \left( \frac{\cos (\pi(x))}{\cos (\pi(y))} \right) \right) \in \mathbb{R}^{3} \right  | +\pi/2 < x, y < -\pi/2 \right\}.
-\end{equation} 
+In the following, we will show screenshots of three different test-cases, that come together with the software.
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.5\textwidth]{figs/Scherk.pdf}
-	\caption{Nine Periods of Scherk Surface}\label{fig:Nine Periods of Scherk Surface}
-\end{figure}
+
+\subsection{Scherk Surface}
+Recall the formulation introduced in section~\ref{sec:mathbasics}
+\begin{equation}
+\Sigma_{\text{trunc}} = \left\{ \left. \left(x, y, \log \left( \frac{\cos (\pi\beta_x(x-\frac{1}{2}))}{\cos (\pi\beta_y(y-\frac{1}{2}))} \right) \right) \in \mathbb{R}^{3} \right  | 0 < x, y < 1 \right\}.
+\end{equation} 
+where we introduced a scaling factor $\beta$\footnote{keyword/constant in \texttt{params.in}: \$SCALE}, which scales the boundaries and effectuates solving the MSE on a truncated domain. 
+
+For now, let $\beta=0.5$, noting that out method converges for $\beta \lessapprox 0.9$, depending on $N$, and shows $\mathcal{O}(N)$ convergence behaviour in both the $\ell_2$ and $\max$-norm if $\beta \lessapprox 0.5$ (cf. figure...) .
+Then, we get the following   
+
+\subsubsection{Sine boundaries}
+
+\subsubsection{Piece-wise boundary conditions}
+
+
+
+
+
+
 
 \subsection{Timings}
 
@@ -629,11 +678,21 @@ As an example set, for N=500 , Newton's tolerance as 10$^{-6}$ and linear solver
 \clearpage
 \appendix
 \section{User manual}
-This section provides a short description on how to run the code. The software accompanying this report is self-contained and guaranteed to run on the RWTH cluster, using either the current versions of the Intel (19) or GCC (9) compiler.
+This section provides a short description on how to run the code. The software accompanying this report is self-contained and guaranteed to run on the RWTH cluster, \sout{using either the current versions of the Intel (19) or GCC (9) compiler}.
+
+\color{@darkred}
+\emph{Update as of last week of February:} Due to a update on the cluster, a few options need to be loaded for the code to compile.
+\lstset{backgroundcolor=\color{gray!20}, language=bash, basicstyle=\ttfamily \small, }
+\begin{lstlisting}
+module switch intel gcc 
+module load LIBRARIES
+module load intelmkl
+\end{lstlisting}
+\normalcolor
 
 \subsection{Compilation}
 To compile the code, open a terminal inside \texttt{source/}. 
-\lstset{backgroundcolor=\color{gray!20}, language=bash, basicstyle=\ttfamily}
+\lstset{backgroundcolor=\color{gray!20}, language=bash, basicstyle=\ttfamily \small}
 \begin{lstlisting}
 	cd build 
 	cmake .. 
@@ -646,11 +705,11 @@ To run a simulation, go to the folder testcases or create a new folder with a va
 Inside this \texttt{params.in}-file, one can find the options to set with descriptions.
 
 \noindent To run the a simulation, execute the following, once the input file is set up:
-\lstset{backgroundcolor=\color{gray!20}, language=bash, basicstyle=\ttfamily, breaklines=true}
+\lstset{backgroundcolor=\color{gray!20}, language=bash, basicstyle=\ttfamily \small, breaklines=true}
 \begin{lstlisting}
 	cd <folder with params.in> 
-	export NAG_KUSARI_FILE=<path to nag_key.txt>        # needed if jacobianOpt=2 
-	ln -s <path to executable minSurf in build/> .      # symbolic link for convenient execution 
+	export NAG_KUSARI_FILE=<path to nag_key.txt>              # needed if jacobianOpt=2 
+	ln -s <path to executable minSurf in build/> .            # symbolic link for convenient execution 
 	./minSurf
 \end{lstlisting}
 Now, the resulting output can be inspected by opening the \texttt{.vts}-files inside \texttt{surfaces/} using Paraview\footnote{to use this on the cluster, execute \texttt{module load GRAPHICS paraview} beforehand.}. If one is interesting in the convergence, one can find the residual data over iteration inside \texttt{residual/}, which can be also plotted using Paraview. 

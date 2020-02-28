@@ -1,19 +1,21 @@
 \BOOKMARK [1][-]{section.1}{Introduction}{}% 1
 \BOOKMARK [1][-]{section.2}{Background}{}% 2
-\BOOKMARK [2][-]{subsection.2.1}{General background \(don't like this title\)}{section.2}% 3
+\BOOKMARK [2][-]{subsection.2.1}{Mathematical basics}{section.2}% 3
 \BOOKMARK [2][-]{subsection.2.2}{Numerical solution}{section.2}% 4
 \BOOKMARK [3][-]{subsubsection.2.2.1}{Discretization}{subsection.2.2}% 5
 \BOOKMARK [3][-]{subsubsection.2.2.2}{Solution}{subsection.2.2}% 6
 \BOOKMARK [2][-]{subsection.2.3}{Consequences for a implementation}{section.2}% 7
 \BOOKMARK [1][-]{section.3}{Implementation}{}% 8
 \BOOKMARK [2][-]{subsection.3.1}{Software/Solver Design}{section.3}% 9
-\BOOKMARK [2][-]{subsection.3.2}{Computing the Jacobian}{section.3}% 10
-\BOOKMARK [2][-]{subsection.3.3}{Solving linear systems}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.4}{Testing}{section.3}% 12
-\BOOKMARK [1][-]{section.4}{Results}{}% 13
-\BOOKMARK [2][-]{subsection.4.1}{Scherk Surface}{section.4}% 14
-\BOOKMARK [2][-]{subsection.4.2}{Timings}{section.4}% 15
-\BOOKMARK [1][-]{section.5}{Conclusions and outlook}{}% 16
-\BOOKMARK [1][-]{appendix.A}{User manual}{}% 17
-\BOOKMARK [2][-]{subsection.A.1}{Compilation}{appendix.A}% 18
-\BOOKMARK [2][-]{subsection.A.2}{Running a simulation}{appendix.A}% 19
+\BOOKMARK [2][-]{subsection.3.2}{A note on solving linear systems}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.3}{Computing the Jacobian}{section.3}% 11
+\BOOKMARK [3][-]{subsubsection.3.3.1}{AD by hand}{subsection.3.3}% 12
+\BOOKMARK [3][-]{subsubsection.3.3.2}{Matrix-free linear solver with dco\137c++}{subsection.3.3}% 13
+\BOOKMARK [2][-]{subsection.3.4}{Testing}{section.3}% 14
+\BOOKMARK [1][-]{section.4}{Results}{}% 15
+\BOOKMARK [2][-]{subsection.4.1}{Scherk Surface}{section.4}% 16
+\BOOKMARK [2][-]{subsection.4.2}{Timings}{section.4}% 17
+\BOOKMARK [1][-]{section.5}{Conclusions and outlook}{}% 18
+\BOOKMARK [1][-]{appendix.A}{User manual}{}% 19
+\BOOKMARK [2][-]{subsection.A.1}{Compilation}{appendix.A}% 20
+\BOOKMARK [2][-]{subsection.A.2}{Running a simulation}{appendix.A}% 21
